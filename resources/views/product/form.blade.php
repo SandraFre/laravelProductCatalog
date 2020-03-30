@@ -50,7 +50,7 @@
                         <div class="form-group">
                             <label for="price">Price</label>
                             <input class="form-control @error('price') is-invalid @enderror" type="number" name="price"
-                                id="price" value="{{old('price', $product->price ?? '') }}" min="0.01" step="0.01">
+                                id="price" value="{{old('price', $product->price ?? 0.01) }}" min="0.01" step="0.01">
                             @error('price')
                             <div class="alert-danger">
                                 {{$message}}
@@ -63,7 +63,7 @@
                             @foreach ($categories as $category)
                             <input type="checkbox" name="categories[]" value="{{$category->id ?? ''}}"
                                 @if(in_array($category->id ?? '', old('categories', $categoryIds ?? [])))checked
-                            @endif>{{$category->title ?? ''}}
+                            @endif>{{$category->title}}
                             @endforeach
                         </div>
                     </div>
