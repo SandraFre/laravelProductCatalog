@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -25,7 +29,7 @@ class CategoryController extends Controller
         return view('category.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(CategoryStoreRequest $request): RedirectResponse
     {
         $data = $request->only('title');
 
@@ -42,7 +46,7 @@ class CategoryController extends Controller
         return view('category.edit', ['category' => $category]);
     }
 
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(CategoryUpdateRequest $request, int $id): RedirectResponse
     {
         $data = $request->only('title');
 

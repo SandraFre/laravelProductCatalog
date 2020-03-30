@@ -12,7 +12,7 @@
                         <div class="form-group">
                             <label for="title">Title</label>
                             <input class="form-control @error('title') is-invalid @enderror" type="text" name="title"
-                                id="title" value="{{old('title', $product->title)}}">
+                                id="title" value="{{old('title', $category->title)}}">
                             @error('title')
                             <div class="alert-danger">
                                 {{$message}}
