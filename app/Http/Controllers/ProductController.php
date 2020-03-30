@@ -27,7 +27,7 @@ class ProductController extends Controller
     public function create(): View
     {
         $categories = Category::query()->get();
-        return view('product.create', [
+        return view('product.form', [
             'categories'=>$categories,
         ]);
     }
@@ -61,7 +61,7 @@ class ProductController extends Controller
         $productCategoryIds = $product->categories()->pluck('id')->toArray();
         $categories = Category::query()->get();
 
-        return view('product.edit', [
+        return view('product.form', [
             'product' => $product,
             'categoryIds' => $productCategoryIds,
             'categories' => $categories,
