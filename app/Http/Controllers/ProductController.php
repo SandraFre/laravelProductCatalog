@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
@@ -8,14 +8,24 @@ use App\Category;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Product;
+use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
+/**
+ * Class ProductController
+ *
+ * @package App\Http\Controllers
+ */
 class ProductController extends Controller
 {
-    public function index(): View
-    {
-        //SELECT * FROM products LIMITS 0, 15
+    /**
+     * @return View
+     */
+    public function index(): View {
+        // SELECT * FROM products LIMITS 15, 30
         /** @var LengthAwarePaginator $products */
         $products = Product::query()->paginate();
 
@@ -24,41 +34,46 @@ class ProductController extends Controller
         ]);
     }
 
-    public function create(): View
-    {
+    /**
+     * @return View
+     */
+    public function create(): View {
+        /** @var Collection|Category[] $categories */
         $categories = Category::query()->get();
+
         return view('product.form', [
-            'categories'=>$categories,
+            'categories' => $categories,
         ]);
     }
 
-    public function store(ProductStoreRequest $request): RedirectResponse
-    {
-        $data = $request->only(
-            'title',
-            'description',
-            'price'
-        );
+    /**
+     * @param ProductStoreRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function store(ProductStoreRequest $request): RedirectResponse {
+        $data = $request->getData();
 
-        // $product = new Product();
-        // $product->title =  $request->input('title');
-        // $product->description =  $request->input('description');
-        // $product->price =  $request->input('price');
-        // $product->save();
+        $catIds = $request->getCategories();
 
-        $catIds = $request->input('categories');
-
+        /** @var Product $product */
         $product = Product::query()->create($data);
         $product->categories()->sync($catIds);
 
         return redirect()->route('products.index');
     }
 
-    public function edit(int $id): View
-    {
-        //SELECT * FROM products WHERE id = ?
+    /**
+     * @param int $id
+     *
+     * @return View
+     */
+    public function edit(int $id): View {
+        // SELECT * FROM products WHERE id = ?
+        /** @var Product $product */
         $product = Product::query()->find($id);
         $productCategoryIds = $product->categories()->pluck('id')->toArray();
+        /** @var Category $categories */
         $categories = Category::query()->get();
 
         return view('product.form', [
@@ -68,13 +83,15 @@ class ProductController extends Controller
         ]);
     }
 
-    public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
-    {
-        $data = $request->only('title', 'description', 'price');
-        $catIds = $request->input('categories');
-
-        // $product->title = $request->input('title');
-        // $product->save();
+    /**
+     * @param ProductUpdateRequest $request
+     * @param Product $product
+     *
+     * @return RedirectResponse
+     */
+    public function update(ProductUpdateRequest $request, Product $product): RedirectResponse {
+        $data = $request->getData();
+        $catIds = $request->getCategories();
 
         $product->update($data);
         $product->categories()->sync($catIds);
@@ -82,13 +99,19 @@ class ProductController extends Controller
         return redirect()->route('products.index');
     }
 
-    public function destroy(int $id): RedirectResponse
-    {
-        //DELETE FROM products WHERE id = ?
+    /**
+     * @param int $id
+     *
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function destroy(int $id): RedirectResponse {
+        // DELETE FROM products WHERE id = ?
         Product::query()
             ->where('id', '=', $id)
             ->delete();
 
         return redirect()->route('products.index');
     }
+
 }
