@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,20 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function() {
     return view('welcome');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')
+    ->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function() {
+        Route::get('users/me', 'UserController@me')
+            ->name('users.me');
+        Route::resource('users', 'UserController')
+            ->only(['update']);
 
-    Route::get('users/me','UserController@me')
-    ->name('users.me');
-
-    Route::prefix('products')->name('products.')->group(function () {
+    Route::prefix('products')->name('products.')->group(function() {
         Route::get('/', 'ProductController@index')
             ->name('index');
         Route::get('create', 'ProductController@create')
@@ -39,11 +42,12 @@ Route::middleware('auth')->group(function () {
             ->name('update');
         Route::delete('{product}', 'ProductController@destroy')
             ->name('destroy');
+
         Route::resource('attributes', 'ProductAttributeController')
             ->except(['show']);
     });
 
-    Route::prefix('categories')->name('categories.')->group(function () {
+    Route::prefix('categories')->name('categories.')->group(function() {
         Route::get('/', 'CategoryController@index')
             ->name('index');
         Route::get('create', 'CategoryController@create')
@@ -58,3 +62,5 @@ Route::middleware('auth')->group(function () {
             ->name('destroy');
     });
 });
+
+

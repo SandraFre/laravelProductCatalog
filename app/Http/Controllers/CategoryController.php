@@ -64,6 +64,7 @@ class CategoryController extends Controller
             ->where('id', '=', $id)
             ->delete();
 
-        return redirect()->route('categories.index');
+        return redirect()
+        ->route('categories.index');
     }
 }

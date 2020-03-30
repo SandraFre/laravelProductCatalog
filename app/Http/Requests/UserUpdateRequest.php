@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -11,9 +14,8 @@ class UserUpdateRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
-        return false;
+    public function authorize(): bool {
+        return true;
     }
 
     /**
@@ -21,10 +23,18 @@ class UserUpdateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules(): array {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($this->route()->parameter('user')->id),
+            ],
+            'password' => 'nullable|string|min:8|confirmed',
         ];
     }
+
 }
