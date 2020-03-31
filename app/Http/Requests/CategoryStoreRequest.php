@@ -28,6 +28,25 @@ class CategoryStoreRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255|min:3',
+            'active' => 'nullable|boolean',
         ];
+    }
+
+    public function getData(): array
+    {
+        return [
+            'title' => $this->getTitle(),
+            'active' => $this->getActive(),
+        ];
+    }
+
+    public function getTitle(): string
+    {
+        return $this->input('title');
+    }
+
+    public function getActive(): bool
+    {
+        return (bool) $this->input('active');
     }
 }
