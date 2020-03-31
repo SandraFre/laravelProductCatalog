@@ -5,7 +5,10 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Category;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class CategoryStoreRequest extends FormRequest
 {
@@ -32,10 +35,27 @@ class CategoryStoreRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return Validator
+     */
+    protected function getValidatorInstance() {
+        $validator = parent::getValidatorInstance();
+
+        $validator->after(function(Validator $validator) {
+            if ($this->slugExists()) {
+                $validator->errors()
+                    ->add('slug', 'This slug already exists.');
+            }
+        });
+
+        return $validator;
+    }
+
     public function getData(): array
     {
         return [
             'title' => $this->getTitle(),
+            'slug'=> $this->getSlug(),
             'active' => $this->getActive(),
         ];
     }
@@ -45,8 +65,24 @@ class CategoryStoreRequest extends FormRequest
         return $this->input('title');
     }
 
+    public function getSlug() {
+        $slugUnprepared = $this->input('slug');
+
+        if (empty($slugUnprepared)) {
+            $slugUnprepared = $this->getTitle();
+        }
+
+        return Str::slug(trim($slugUnprepared));
+    }
+
     public function getActive(): bool
     {
         return (bool) $this->input('active');
+    }
+
+    private function slugExists(): bool {
+        return Category::query()
+            ->where('slug', '=', $this->getSlug())
+            ->exists();
     }
 }
