@@ -16,7 +16,9 @@ class AddSlugOnProductsTable extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('slug');
+            $table
+                ->string('slug')
+                ->after('title');
         });
 
         $this->updateSlugs();
@@ -38,14 +40,15 @@ class AddSlugOnProductsTable extends Migration
         });
     }
 
-    private function updateSlugs():void{
+    private function updateSlugs(): void
+    {
         $products = DB::table('products')->select(['id', 'title'])->get();
 
         foreach ($products as $product) {
             $slug = Str::slug($product->title . ' ' . $product->id);
             DB::table('products')
-            ->where('id', '=', $product->id)
-            ->update(['slug'=>$slug]);
+                ->where('id', '=', $product->id)
+                ->update(['slug' => $slug]);
         }
     }
 }
