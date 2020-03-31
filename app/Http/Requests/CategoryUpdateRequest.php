@@ -77,7 +77,7 @@ class CategoryUpdateRequest extends FormRequest
     private function slugExists(): bool {
         return Category::query()
             ->where('slug', '=', $this->getSlug())
-            ->where('id', '!=', $this->route()->parameter('category')->id)
+            ->where('id', '!=', $this->route()->parameter('category'))
             ->exists();
     }
 }

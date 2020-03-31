@@ -34,7 +34,7 @@
                             <div class="form-group">
                                 <label for="slug">Slug</label>
                                 <input class="form-control @error('slug') is-invalid @enderror" type="text" name="slug" id="slug"
-                                       value="{{ old('slug', $product->slug ?? '') }}">
+                                       value="{{ old('slug', $category->slug ?? '') }}">
                                 @error('slug')
                                 <div class="alert-danger">
                                     {{ $message }}
