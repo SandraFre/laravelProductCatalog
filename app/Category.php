@@ -13,9 +13,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $title
+ * @property int $active
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereTitle($value)
@@ -25,6 +27,11 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $fillable = [
-        'title'
+        'title',
+        'active'
+    ];
+
+    protected $casts = [
+        'active' => 'boolean',
     ];
 }
