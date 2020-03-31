@@ -32,6 +32,16 @@
                                 @enderror
                             </div>
                             <div class="form-group">
+                                <label for="slug">Slug</label>
+                                <input class="form-control @error('slug') is-invalid @enderror" type="text" name="slug" id="slug"
+                                       value="{{ old('slug', $product->slug ?? '') }}">
+                                @error('slug')
+                                <div class="alert-danger">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
                                 <label for="active">Active</label>
                                 <input class="@error('active') is-invalid @enderror" type="checkbox" name="active" id="active"
                                        value="1" @if (old('active', $category->active ?? false)) checked @endif>

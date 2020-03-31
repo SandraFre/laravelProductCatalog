@@ -6,14 +6,21 @@
             <div class="card">
                 <div class="card-header">
                     Categories
-                    <a href="{{route('categories.create')}}" class="btn btn-sm btn-primary">Add</a>
+                    <a href="{{route('categories.create')}}" class="btn btn-sm btn-primary">Add new</a>
                 </div>
                 <div class="card-body">
                     <table class="table">
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Slug</th>
+                            <th>Actions</th>
+                        </tr>
                         @foreach($list as $item)
                         <tr>
                             <td>{{$item->id}}</td>
                             <td>{{$item->title}}</td>
+                            <td>{{ $item->slug }}</td>
                             <td>
                                 <a href="{{ route('categories.edit', ['category'=>$item->id])}} " class="btn btn-sm btn-primary">Edit</a>
                                 <form action="{{ route('categories.destroy', ['category'=>$item->id]) }}" method="post">
