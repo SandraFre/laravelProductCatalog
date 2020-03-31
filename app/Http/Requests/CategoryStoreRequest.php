@@ -80,7 +80,7 @@ class CategoryStoreRequest extends FormRequest
         return (bool) $this->input('active');
     }
 
-    private function slugExists(): bool {
+    protected function slugExists(): bool {
         return Category::query()
             ->where('slug', '=', $this->getSlug())
             ->exists();
