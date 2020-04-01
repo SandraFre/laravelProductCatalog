@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $slug
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereSlug($value)
  */
 class Category extends Model
 {

@@ -44,6 +44,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('products.index') }}">{{ __('Products') }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admins.index') }}">{{ __('Admins') }}</a>
+                        </li>
                         @endauth
                     </ul>
 
@@ -89,6 +92,13 @@
             @if(session('status'))
             <div class="alert alert-success">
                 {{session('status')}}
+            </div>
+            @endif
+            @yield('content')
+
+            @if(session('danger'))
+            <div class="alert alert-danger">
+                {{session('danger')}}
             </div>
             @endif
             @yield('content')
