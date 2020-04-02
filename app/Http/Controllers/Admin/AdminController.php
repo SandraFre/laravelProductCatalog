@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminStoreRequest;
+use App\Http\Requests\Admin\AdminUpdateRequest;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -75,9 +76,11 @@ class AdminController extends Controller
      * @param  \App\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Admin $admin)
+    public function update(AdminUpdateRequest $request, Admin $admin): RedirectResponse
     {
-        //
+        $data = $request->getData();
+        $admin->update($data);
+        return redirect()->route('admins.index');
     }
 
     /**
@@ -86,8 +89,12 @@ class AdminController extends Controller
      * @param  \App\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Admin $admin)
+    public function destroy(int $id): RedirectResponse
     {
-        //
+        Admin::query()
+        ->where('id', '=', $id)
+        ->delete();
+
+        return redirect()->route('admins.index');
     }
 }
