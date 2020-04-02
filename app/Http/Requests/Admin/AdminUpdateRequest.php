@@ -1,18 +1,26 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Http\Requests\Admin;
 
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
-class AdminUpdateRequest extends AdminStoreRequest
+/**
+ * Class AdminUpdateRequest
+ *
+ * @package App\Http\Requests\Admin
+ */
+class AdminUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize(): bool
-    {
+    public function authorize(): bool {
         return true;
     }
 
@@ -21,9 +29,8 @@ class AdminUpdateRequest extends AdminStoreRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
-         return [
+    public function rules(): array {
+        return [
             'name' => 'nullable|string|max:30',
             'last_name' => 'nullable|string|max:50',
             'email' => [
@@ -31,10 +38,70 @@ class AdminUpdateRequest extends AdminStoreRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('admins')->ignore($this->route()->parameter('admin')->id)
+                Rule::unique('admins')->ignore($this->route()->parameter('admin')->id),
             ],
-            'password' => 'required|string|confirmed|min:8',
-            'active' => 'boolean'
+            'password' => 'nullable|string|confirmed|min:8',
+            'active' => 'boolean',
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getData(): array {
+        $data = [
+            'name' => $this->getName(),
+            'last_name' => $this->getLastName(),
+            'email' => $this->getEmail(),
+            'active' => $this->getActive(),
+        ];
+
+        if (!empty($this->input('password'))) {
+            $data['password'] = $this->getPass();
+        }
+
+        return $data;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string {
+        return $this->input('name');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLastName(): ?string {
+        return $this->input('last_name');
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string {
+        return $this->input('email');
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getPass(): ?string {
+        $password = $this->input('password');
+
+        if (!empty($password)) {
+            return Hash::make($password);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getActive(): bool {
+        return (bool)$this->input('active');
+    }
+
 }
