@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
@@ -19,24 +19,12 @@ use Illuminate\View\View;
 class UserController extends Controller
 {
     /**
-     * @return View
-     */
-    public function me(): View
-    {
-        /** @var User $user */
-        $user = Auth::user();
-
-        return view('user.edit', ['user' => $user]);
-    }
-
-    /**
      * @param UserUpdateRequest $request
      * @param User $user
      *
      * @return RedirectResponse
      */
-    public function update(UserUpdateRequest $request, User $user): RedirectResponse
-    {
+    public function update(UserUpdateRequest $request, User $user): RedirectResponse {
         $user->name = $request->input('name');
         $user->email = $request->input('email');
 
@@ -47,8 +35,8 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()
-            ->route('users.me')
+        return redirect()->route('users.me')
             ->with('status', 'Info updated successfully!');
     }
+
 }
