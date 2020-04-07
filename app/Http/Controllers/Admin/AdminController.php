@@ -8,6 +8,7 @@ use App\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminStoreRequest;
 use App\Http\Requests\Admin\AdminUpdateRequest;
+use App\Roles;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +40,11 @@ class AdminController extends Controller
      * @return View
      */
     public function create(): View {
-        return view('admin.form');
+        $roles = Roles::query()->orderBy('id')->get(['id', 'name']);
+
+        return view('admin.form', [
+            'roles' => $roles,
+        ]);
     }
 
     /**
@@ -51,7 +56,9 @@ class AdminController extends Controller
      */
     public function store(AdminStoreRequest $request): RedirectResponse {
         try {
-            Admin::query()->create($request->getData());
+            $admin = Admin::query()->create($request->getData());
+            $admin->roles()->sync($request->getRoles());
+
         } catch (Exception $exception) {
             return redirect()->back()
                 ->withInput()
@@ -70,7 +77,14 @@ class AdminController extends Controller
      * @return View
      */
     public function edit(Admin $admin): View {
-        return view('admin.form', ['item' => $admin]);
+        $roles = Roles::query()->orderBy('id')->get(['id', 'name']);
+        $rolesIds = $admin->roles->pluck('id')->toArray();
+
+        return view('admin.form', [
+            'item' => $admin,
+            'roles'=> $roles,
+            'rolesIds' =>$rolesIds,
+            ]);
     }
 
     /**
@@ -80,7 +94,15 @@ class AdminController extends Controller
         /** @var Admin $admin */
         $admin = Auth::user();
 
-        return view('admin.form', ['item' => $admin]);
+        $roles = Roles::query()->orderBy('id')->get(['id', 'name']);
+        $rolesIds = $admin->roles->pluck('id')->toArray();
+
+
+        return view('admin.form', [
+            'item' => $admin,
+            'roles'=> $roles,
+            'rolesIds' =>$rolesIds,
+            ]);
     }
 
     /**
@@ -94,6 +116,7 @@ class AdminController extends Controller
     public function update(AdminUpdateRequest $request, Admin $admin): RedirectResponse {
         try {
             $admin->update($request->getData());
+            $admin->roles()->sync($request->getRoles());
         } catch (Exception $exception) {
             return redirect()->back()
                 ->withInput()

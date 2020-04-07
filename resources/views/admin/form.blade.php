@@ -74,6 +74,15 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="roles">Roles</label>
+                            @foreach($roles as $role)
+                                <input type="checkbox" id="roles" name="roles[]" value="{{ $role->id }}"
+                                       @if(in_array($role->id, old('roles', $rolesIds ?? []))) checked @endif
+                                > {{ $role->name }}
+                            @endforeach
+                        </div>
+
+                        <div class="form-group">
                             <label for="active">Active</label>
                             <input class="@error('active') is-invalid @enderror" type="checkbox" name="active"
                                 id="active" value="1" @if (old('active', $item->active ?? false)) checked @endif>

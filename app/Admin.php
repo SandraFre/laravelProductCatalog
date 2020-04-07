@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Notifications\ResetAdminPasswordNotification;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -24,7 +25,9 @@ use Illuminate\Notifications\Notifiable;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Roles[] $roles
  * @property-read int|null $notifications_count
+ * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin query()
@@ -61,6 +64,15 @@ class Admin extends Authenticatable
         'email_verified_at' => 'datetime',
         'active' => 'boolean',
     ];
+
+    public function roles() :BelongsToMany
+    {
+        return $this->belongsToMany(
+            Roles::class,
+            'admin_role',
+            'admin_id',
+            'role_id');
+    }
 
     public function sendPasswordResetNotification($token)
     {

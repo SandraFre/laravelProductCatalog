@@ -42,6 +42,7 @@ class AdminUpdateRequest extends FormRequest
             ],
             'password' => 'nullable|string|confirmed|min:8',
             'active' => 'boolean',
+            'roles' => 'sometimes|array',
         ];
     }
 
@@ -102,6 +103,11 @@ class AdminUpdateRequest extends FormRequest
      */
     public function getActive(): bool {
         return (bool)$this->input('active');
+    }
+
+    public function getRoles() : array
+    {
+        return $this->input('roles', []);
     }
 
 }
