@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Http\Controllers\Admin;
 
@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RoleStoreRequest;
 use App\Http\Requests\Admin\RoleUpdateRequest;
 use App\Roles;
+use App\Services\RouteAccessManager;
 use Exception;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class RoleController extends Controller
@@ -36,7 +36,13 @@ class RoleController extends Controller
      */
     public function create(): View
     {
-        return view('role.form');
+        /** @var RouteAccessManager $routeManager */
+        $routeManager = app()->make(RouteAccessManager::class);
+        $routesNames = $routeManager->getRoutes();
+
+        return view('role.form', [
+            'routes' => $routesNames,
+        ]);
     }
 
     /**
@@ -62,8 +68,8 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Roles $roles
-     * @return \Illuminate\Http\Response
+     * @param Roles $role
+     * @return View
      */
     public function show(Roles $role): View
     {
@@ -81,36 +87,43 @@ class RoleController extends Controller
      */
     public function edit(Roles $role): View
     {
-        return view('role.form', ['item' => $role]);
+        /** @var RouteAccessManager $routeManager */
+        $routeManager = app()->make(RouteAccessManager::class);
+        $routesNames = $routeManager->getRoutes();
+
+        return view('role.form', [
+            'item' => $role,
+            'routes' => $routesNames,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param Roles $roles
-     * @return \Illuminate\Http\Response
+     * @param RoleUpdateRequest $request
+     * @param Roles $role
+     * @return RedirectResponse
      */
     public function update(RoleUpdateRequest $request, Roles $role): RedirectResponse
     {
         try {
             $role->update($request->getData());
         } catch (Exception $exception) {
-            return back()
-                ->withInput()
+            return back()->withInput()
                 ->with('danger', $exception->getMessage());
         }
+
         return redirect()->route('roles.index')
-            ->with('status', 'Role updated');
+            ->with('status', 'Role updated.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Roles $roles
-     * @return \Illuminate\Http\Response
+     * @param Roles $role
+     * @return RedirectResponse
      */
-    public function destroy(Roles $role) : RedirectResponse
+    public function destroy(Roles $role): RedirectResponse
     {
         try {
             $role->delete();
@@ -118,7 +131,8 @@ class RoleController extends Controller
             return back()
                 ->with('danger', $exception->getMessage());
         }
+
         return redirect()->route('roles.index')
-            ->with('status', 'Role deleted');
+            ->with('status', 'Role deleted.');
     }
 }

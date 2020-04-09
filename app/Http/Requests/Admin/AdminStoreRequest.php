@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * Class AdminStoreRequest
@@ -35,7 +34,7 @@ class AdminStoreRequest extends FormRequest
             'email' => 'required|string|email|unique:admins|max:255',
             'password' => 'required|string|confirmed|min:8',
             'active' => 'boolean',
-            'roles'=> 'sometimes|array'
+            'roles' => 'sometimes|array',
         ];
     }
 
@@ -77,7 +76,7 @@ class AdminStoreRequest extends FormRequest
      * @return string
      */
     public function getPass(): string {
-        return Hash::make($this->input('password'));
+        return $this->input('password');
     }
 
     /**
@@ -87,7 +86,10 @@ class AdminStoreRequest extends FormRequest
         return (bool)$this->input('active');
     }
 
-    public function getRoles() : array
+    /**
+     * @return array
+     */
+    public function getRoles(): array
     {
         return $this->input('roles', []);
     }

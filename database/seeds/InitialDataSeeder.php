@@ -15,6 +15,7 @@ class InitialDataSeeder extends Seeder
     {
         $this->call([
             CategoriesTableSeeder::class,
+            RolesTableSeeder::class,
         ]);
     }
 }

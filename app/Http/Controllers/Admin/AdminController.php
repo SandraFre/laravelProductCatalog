@@ -9,8 +9,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminStoreRequest;
 use App\Http\Requests\Admin\AdminUpdateRequest;
 use App\Roles;
+use App\Services\AdminService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -22,11 +24,26 @@ use Illuminate\View\View;
 class AdminController extends Controller
 {
     /**
+     * @var AdminService
+     */
+    private $service;
+
+    /**
+     * AdminController constructor.
+     * @param AdminService $adminService
+     */
+    public function __construct(AdminService $adminService)
+    {
+        $this->service = $adminService;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return View
      */
-    public function index(): View {
+    public function index(): View
+    {
         $admins = Admin::query()->paginate();
 
         return view('admin.list', [
@@ -39,7 +56,9 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function create(): View {
+    public function create(): View
+    {
+        /** @var Collection $roles */
         $roles = Roles::query()->orderBy('id')->get(['id', 'name']);
 
         return view('admin.form', [
@@ -54,15 +73,21 @@ class AdminController extends Controller
      *
      * @return RedirectResponse
      */
-    public function store(AdminStoreRequest $request): RedirectResponse {
+    public function store(AdminStoreRequest $request): RedirectResponse
+    {
         try {
-            $admin = Admin::query()->create($request->getData());
-            $admin->roles()->sync($request->getRoles());
+            $admin = $this->service->create(
+                $request->getEmail(),
+                $request->getPass(),
+                $request->getActive(),
+                $request->getData()
+            );
 
+            $admin->roles()->sync($request->getRoles());
         } catch (Exception $exception) {
             return redirect()->back()
                 ->withInput()
-                ->with('danger', 'Something wrong on try to create admin.');
+                ->with('danger', $exception->getMessage());
         }
 
         return redirect()->route('admins.index')
@@ -76,33 +101,35 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function edit(Admin $admin): View {
+    public function edit(Admin $admin): View
+    {
+        /** @var Collection $roles */
         $roles = Roles::query()->orderBy('id')->get(['id', 'name']);
         $rolesIds = $admin->roles->pluck('id')->toArray();
 
         return view('admin.form', [
             'item' => $admin,
-            'roles'=> $roles,
-            'rolesIds' =>$rolesIds,
-            ]);
+            'roles' => $roles,
+            'rolesIds' => $rolesIds,
+        ]);
     }
 
     /**
      * @return View
      */
-    public function me(): View {
+    public function me(): View
+    {
         /** @var Admin $admin */
         $admin = Auth::user();
-
+        /** @var Collection $roles */
         $roles = Roles::query()->orderBy('id')->get(['id', 'name']);
         $rolesIds = $admin->roles->pluck('id')->toArray();
 
-
         return view('admin.form', [
             'item' => $admin,
-            'roles'=> $roles,
-            'rolesIds' =>$rolesIds,
-            ]);
+            'roles' => $roles,
+            'rolesIds' => $rolesIds,
+        ]);
     }
 
     /**
@@ -113,7 +140,8 @@ class AdminController extends Controller
      *
      * @return RedirectResponse
      */
-    public function update(AdminUpdateRequest $request, Admin $admin): RedirectResponse {
+    public function update(AdminUpdateRequest $request, Admin $admin): RedirectResponse
+    {
         try {
             $admin->update($request->getData());
             $admin->roles()->sync($request->getRoles());
@@ -134,7 +162,8 @@ class AdminController extends Controller
      *
      * @return RedirectResponse
      */
-    public function destroy(Admin $admin): RedirectResponse {
+    public function destroy(Admin $admin): RedirectResponse
+    {
         try {
             $admin->delete();
         } catch (Exception $exception) {
