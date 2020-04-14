@@ -16,6 +16,11 @@ class ForgotPasswordController extends Controller
         return view('admin.auth.passwords.email');
     }
 
+    protected function credentials(\Illuminate\Http\Request $request)
+    {
+        return array_merge($request->only('email'), ['acttive' => true]);
+    }
+
     public function broker() {
         return Password::broker('admins');
     }

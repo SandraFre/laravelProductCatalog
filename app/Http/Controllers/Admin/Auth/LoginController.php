@@ -27,6 +27,11 @@ class LoginController extends Controller
         return view('admin.auth.login');
     }
 
+    protected function credentials(\Illuminate\Http\Request $request)
+    {
+        return array_merge($request->only($this->username(), 'password'), ['active' => true]);
+    }
+
     public function guard()
     {
         return   Auth::guard('admin');

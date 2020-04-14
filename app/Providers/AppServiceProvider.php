@@ -21,8 +21,13 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        //
+        $this->loadHelpers();
+    }
+
+    public function loadHelpers(): void
+    {
+        include_once __DIR__ . '/../Helpers/route_helper.php';
     }
 }

@@ -39,6 +39,13 @@ class ResetPasswordController extends Controller
         ]);
     }
 
+    protected function credentials(\Illuminate\Http\Request $request)
+    {
+        return array_merge($request->only(
+            'email', 'password', 'password_confirmation', 'token'
+        ), ['active' => true]);
+    }
+
     /**
      * @return PasswordBroker
      */
