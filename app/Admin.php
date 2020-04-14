@@ -1,52 +1,59 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App;
 
 use App\Notifications\ResetAdminPasswordNotification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
-
-
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
- * App\Admin
+ * Class Admin
  *
+ * @package App
  * @property int $id
  * @property string|null $name
  * @property string|null $last_name
  * @property string $email
- * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property Carbon|null $email_verified_at
  * @property string $password
  * @property bool $active
  * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Roles[] $roles
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
+ * @property-read Collection|Roles[] $roles
  * @property-read int|null $notifications_count
  * @property-read int|null $roles_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin whereLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin whereUpdatedAt($value)
+ * @method static Builder|Admin newModelQuery()
+ * @method static Builder|Admin newQuery()
+ * @method static Builder|Admin query()
+ * @method static Builder|Admin whereActive($value)
+ * @method static Builder|Admin whereCreatedAt($value)
+ * @method static Builder|Admin whereEmail($value)
+ * @method static Builder|Admin whereEmailVerifiedAt($value)
+ * @method static Builder|Admin whereId($value)
+ * @method static Builder|Admin whereLastName($value)
+ * @method static Builder|Admin whereName($value)
+ * @method static Builder|Admin wherePassword($value)
+ * @method static Builder|Admin whereRememberToken($value)
+ * @method static Builder|Admin whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Admin extends Authenticatable
 {
     use Notifiable;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'name',
         'last_name',
@@ -55,25 +62,38 @@ class Admin extends Authenticatable
         'active',
     ];
 
+    /**
+     * @var array
+     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    /**
+     * @var array
+     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'active' => 'boolean',
     ];
 
-    public function roles() :BelongsToMany
+    /**
+     * @return BelongsToMany
+     */
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(
             Roles::class,
             'admin_role',
             'admin_id',
-            'role_id');
+            'role_id'
+        );
     }
 
+    /**
+     * @param string $token
+     */
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetAdminPasswordNotification($token));

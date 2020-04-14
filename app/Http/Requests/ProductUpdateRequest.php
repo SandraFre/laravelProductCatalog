@@ -6,8 +6,6 @@ namespace App\Http\Requests;
 
 use App\Product;
 
-
-
 /**
  * Class ProductUpdateRequest
  *
@@ -42,5 +40,4 @@ class ProductUpdateRequest extends ProductStoreRequest
             ->where('id', '!=', $this->route()->parameter('product')->id)
             ->exists();
     }
-
 }

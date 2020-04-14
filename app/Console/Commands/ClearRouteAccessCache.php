@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\RouteAccessManager;
+use Illuminate\Console\Command;
 
 class ClearRouteAccessCache extends Command
 {
@@ -19,13 +21,16 @@ class ClearRouteAccessCache extends Command
      *
      * @var string
      */
-    protected $description = 'Clear admin route access cache';
-
+    protected $description = 'Clear admin route access cache.';
+    /**
+     * @var RouteAccessManager
+     */
     private $routeAccessManager;
+
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param RouteAccessManager $routeAccessManager
      */
     public function __construct(RouteAccessManager $routeAccessManager)
     {
@@ -36,11 +41,12 @@ class ClearRouteAccessCache extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->routeAccessManager->flushCache();
-        $this->info('Route access cache cleared');
+
+        $this->info('Route access cache cleared.');
     }
 }

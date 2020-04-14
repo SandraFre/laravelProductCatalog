@@ -51,9 +51,9 @@ class ProductStoreRequest extends FormRequest
 
         $validator->after(function(Validator $validator) {
             if (
-                
+                ($this->isMethod('post') || $this->isMethod('put')) &&
                 $this->slugExists()
-                ) {
+            ) {
                 $validator->errors()
                     ->add('slug', 'This slug already exists.');
             }
@@ -68,7 +68,7 @@ class ProductStoreRequest extends FormRequest
     public function getData(): array {
         return [
             'title' => $this->getTitle(),
-            'slug'=> $this->getSlug(),
+            'slug' => $this->getSlug(),
             'description' => $this->getDescription(),
             'price' => $this->getPrice(),
             'active' => $this->getActive(),

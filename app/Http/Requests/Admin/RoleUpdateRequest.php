@@ -1,12 +1,15 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * Class RoleUpdateRequest
+ * @package App\Http\Requests\Admin
+ */
 class RoleUpdateRequest extends RoleStoreRequest
 {
     /**
@@ -14,7 +17,7 @@ class RoleUpdateRequest extends RoleStoreRequest
      *
      * @return bool
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -24,7 +27,7 @@ class RoleUpdateRequest extends RoleStoreRequest
      *
      * @return array
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'name' => [
@@ -32,12 +35,10 @@ class RoleUpdateRequest extends RoleStoreRequest
                 'string',
                 'min:3',
                 'max:100',
-                Rule::unique('roles')->ignoreModel($this->route()->parameter('role'))
+                Rule::unique('roles')->ignoreModel($this->route()->parameter('role')),
             ],
             'full_access' => 'boolean',
             'description' => 'nullable|max:1000',
         ];
     }
-
-
 }

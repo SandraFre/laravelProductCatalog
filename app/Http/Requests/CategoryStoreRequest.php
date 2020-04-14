@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace App\Http\Requests;
 
@@ -10,6 +9,11 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
+/**
+ * Class CategoryStoreRequest
+ *
+ * @package App\Http\Requests
+ */
 class CategoryStoreRequest extends FormRequest
 {
     /**
@@ -17,8 +21,7 @@ class CategoryStoreRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize(): bool
-    {
+    public function authorize(): bool {
         return true;
     }
 
@@ -27,11 +30,9 @@ class CategoryStoreRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules() {
         return [
-            'title' => 'required|string|max:255|min:3',
-            'active' => 'nullable|boolean',
+            'title' => 'required|string|min:3|max:255',
         ];
     }
 
@@ -51,20 +52,26 @@ class CategoryStoreRequest extends FormRequest
         return $validator;
     }
 
-    public function getData(): array
-    {
+    /**
+     * @return array
+     */
+    public function getData(): array {
         return [
             'title' => $this->getTitle(),
-            'slug'=> $this->getSlug(),
-            'active' => $this->getActive(),
+            'slug' => $this->getSlug(),
         ];
     }
 
-    public function getTitle(): string
-    {
-        return $this->input('title');
+    /**
+     * @return string
+     */
+    public function getTitle(): string {
+        return (string)$this->input('title');
     }
 
+    /**
+     * @return string
+     */
     public function getSlug() {
         $slugUnprepared = $this->input('slug');
 
@@ -75,11 +82,9 @@ class CategoryStoreRequest extends FormRequest
         return Str::slug(trim($slugUnprepared));
     }
 
-    public function getActive(): bool
-    {
-        return (bool) $this->input('active');
-    }
-
+    /**
+     * @return bool
+     */
     protected function slugExists(): bool {
         return Category::query()
             ->where('slug', '=', $this->getSlug())

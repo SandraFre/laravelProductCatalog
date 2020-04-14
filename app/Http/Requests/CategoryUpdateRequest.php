@@ -1,10 +1,19 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Http\Requests;
 
 use App\Category;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
-
+/**
+ * Class CategoryUpdateRequest
+ *
+ * @package App\Http\Requests
+ */
 class CategoryUpdateRequest extends CategoryStoreRequest
 {
     /**
@@ -12,8 +21,7 @@ class CategoryUpdateRequest extends CategoryStoreRequest
      *
      * @return bool
      */
-    public function authorize(): bool
-    {
+    public function authorize(): bool {
         return true;
     }
 
@@ -22,16 +30,18 @@ class CategoryUpdateRequest extends CategoryStoreRequest
      *
      * @return array
      */
-    public function rules(): array
-    {
+    public function rules() {
         return parent::rules();
     }
 
-
+    /**
+     * @return bool
+     */
     protected function slugExists(): bool {
         return Category::query()
             ->where('slug', '=', $this->getSlug())
             ->where('id', '!=', $this->route()->parameter('category'))
             ->exists();
     }
+
 }
