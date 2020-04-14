@@ -46,8 +46,14 @@
 
                             <div class="form-group">
                                 <label for="image">Image</label>
-                                <input class=" @error('image') is-invalid @enderror" type="file" name="image" id="image"
-                                       value="">
+                                @isset($product->id)
+                                    @foreach($product->images as $image)
+                                    <img src="{{Storage::url($image->file)}}" width="100px" class="border">
+                                    @endforeach
+                                    <input type="checkbox" name="delete_images" value="1"> {{__('Delete images')}}
+                                @endisset
+                                <input class=" @error('image') is-invalid @enderror" type="file" name="image[]" id="image"
+                                       value="" multiple>
                                 @error('image')
                                 <div class="alert-danger">
                                     {{ $message }}

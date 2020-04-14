@@ -9,10 +9,12 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Product;
 use App\ProductImage;
+use App\Services\ImagesManager;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 /**
@@ -27,10 +29,10 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        // SELECT * FROM products LIMITS 15, 30
         /** @var LengthAwarePaginator $products */
         $products = Product::query()->with(['images', 'categories'])
             ->paginate();
+
         return view('product.product-list', [
             'list' => $products,
         ]);
@@ -64,11 +66,8 @@ class ProductController extends Controller
         $product = Product::query()->create($data);
         $product->categories()->sync($catIds);
 
-        if ($uploadedFile = $request->getImage()) {
-            $imagePath = $uploadedFile->store('products');
-            $productImage = new ProductImage(['file' => $imagePath]);
-            $product->images()->save($productImage);
-        }
+        ImagesManager::saveMany($product, $request->getImages(), ProductImage::class,
+            'file', ImagesManager::PATH_PRODUCT);
 
         return redirect()->route('products.index');
     }
@@ -80,7 +79,6 @@ class ProductController extends Controller
      */
     public function edit(int $id): View
     {
-        // SELECT * FROM products WHERE id = ?
         /** @var Product $product */
         $product = Product::query()->find($id);
         $productCategoryIds = $product->categories()->pluck('id')->toArray();
@@ -108,23 +106,28 @@ class ProductController extends Controller
         $product->update($data);
         $product->categories()->sync($catIds);
 
-        return redirect()->route('products.index');
+        ImagesManager::saveMany($product, $request->getImages(), ProductImage::class,
+            'file', ImagesManager::PATH_PRODUCT, $request->getDeleteImages());
+
+        return redirect()->route('products.index')
+            ->with('status', 'Product updated.');
     }
 
     /**
-     * @param int $id
-     *
+     * @param Product $product
      * @return RedirectResponse
      * @throws Exception
      */
-    public function destroy(int $id): RedirectResponse
+    public function destroy(Product $product): RedirectResponse
     {
-        // DELETE FROM products WHERE id = ?
-        Product::query()
-            ->where('id', '=', $id)
-            ->delete();
+        Storage::delete(
+            $product->images->pluck('file')->toArray()
+        );
 
-        return redirect()->route('products.index');
+        $product->delete();
+
+        return redirect()->route('products.index')
+            ->with('status', 'Product deleted.');
     }
 
 }
