@@ -7,13 +7,14 @@
                 <div class="card">
                     <div class="card-header">
                         Products
-                        <a href="{{ route('products.create') }}" class="btn btn-sm btn-primary">+</a>
+                        <a href="{{ route('products.create') }}" class="btn btn-sm btn-primary">Add new</a>
                     </div>
 
                     <div class="card-body">
                         <table class="table">
                             <tr>
                                 <th>#</th>
+                                <th>Image</th>
                                 <th>Title</th>
                                 <th>Slug</th>
                                 <th>Price</th>
@@ -25,6 +26,11 @@
                             @foreach($list as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
+                                    <td>
+                                        @if ($item->images->isNotEmpty())
+                                            <img src="{{Storage::url($item->images->first()->file)}}" width="100px">
+                                        @endif
+                                    </td>
                                     <td>{{ $item->title }}</td>
                                     <td>{{ $item->slug }}</td>
                                     <td>{{ $item->price }}</td>

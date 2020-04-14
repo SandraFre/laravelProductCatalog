@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         Categories
-                        <a href="{{ route('categories.create') }}" class="btn btn-sm btn-primary">+</a>
+                        <a href="{{ route('categories.create') }}" class="btn btn-sm btn-primary">Add new</a>
                     </div>
 
                     <div class="card-body">
