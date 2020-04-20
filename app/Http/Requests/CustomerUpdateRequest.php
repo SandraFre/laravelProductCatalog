@@ -5,9 +5,10 @@ declare(strict_types = 1);
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
-class UserUpdateRequest extends FormRequest
+class CustomerUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,10 +32,31 @@ class UserUpdateRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->route()->parameter('user')->id),
+                Rule::unique('users')->ignore($this->route()->parameter('customer')->id),
             ],
             'password' => 'nullable|string|min:8|confirmed',
         ];
+    }
+
+    public function getName(): string
+    {
+        return $this->input('name');
+    }
+
+    public function getEmail(): string
+    {
+        return $this->input('email');
+    }
+
+    public function getHashPassword(): ?string
+    {
+        $pass = $this->input('password');
+
+        if ($pass !==null) {
+           $pass = Hash::make($pass);
+        }
+
+        return $pass;
     }
 
 }
