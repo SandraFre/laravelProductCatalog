@@ -25,7 +25,8 @@ class CategoryService
 
     public function getBySlugForApi(string $slug): CategoryDTO
     {
-        $category = Category::query()->where('slug', '=', $slug)
+        $category = Category::query()
+            ->where('slug', '=', $slug)
             ->firstOrFail();
 
         return new CategoryDTO($category);
