@@ -37,6 +37,15 @@ class ApiResponse
         $response['message'] = $message ?? 'Something wrong';
 
         return response()->json($response, JsonResponse::HTTP_BAD_REQUEST);
+
+    }
+
+    public function unauthorized(?string $message = null)
+    {
+        $response = $this->setStatus(JsonResponse::HTTP_UNAUTHORIZED)->base();
+        $response['message'] = $message ?? 'Unauthorized';
+
+        return response()->json($response, JsonResponse::HTTP_UNAUTHORIZED);
     }
 
     public function setStatus(int $status = null): ApiResponse
@@ -46,12 +55,12 @@ class ApiResponse
         return $this;
     }
 
-    protected function base():array
+    protected function base(): array
     {
-        return[
+        return [
             'status' => $this->status ?? JsonResponse::HTTP_OK,
             'time' => Carbon::now()->timestamp,
-            'message' =>'',
+            'message' => '',
         ];
     }
 }
