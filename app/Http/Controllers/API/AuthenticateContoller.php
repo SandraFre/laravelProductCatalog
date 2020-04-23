@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\DTO\CustomerMiniDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\LoginRequest;
 use App\Http\Responses\ApiResponse;
@@ -31,4 +32,16 @@ class AuthenticateContoller extends Controller
             return (new ApiResponse())->exception($exception->getMessage());
         }
     }
+
+    public function me(): JsonResponse
+    {
+        try {
+            $customer = auth('sanctum')->user();
+
+            return(new ApiResponse())->success(new CustomerMiniDTO($customer));
+        } catch (Exception $exception) {
+            return (new ApiResponse())->exception($exception->getMessage());
+        }
+    }
+
 }

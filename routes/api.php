@@ -23,6 +23,10 @@ Route::namespace('API')->name('api.')->group(function ()
 {
     Route::prefix('auth')->group(function(){
         Route::post('login', 'AuthenticateContoller@login')->name('login');
+
+        Route::middleware('auth:sanctum')->group(function(){
+            Route::get('me', 'AuthenticateContoller@me')->name('me');
+        });
     });
 
     Route::apiResource('categories', 'CategoryController')->only(['index', 'show']);
