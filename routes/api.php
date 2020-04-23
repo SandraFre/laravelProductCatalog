@@ -25,6 +25,7 @@ Route::namespace('API')->name('api.')->group(function ()
         Route::post('login', 'AuthenticateContoller@login')->name('login');
 
         Route::middleware('auth:sanctum')->group(function(){
+            Route::post('logout', 'AuthenticateContoller@logout')->name('logout');
             Route::get('me', 'AuthenticateContoller@me')->name('me');
         });
     });

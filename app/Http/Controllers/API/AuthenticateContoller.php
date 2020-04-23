@@ -9,8 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\LoginRequest;
 use App\Http\Responses\ApiResponse;
 use Exception;
+use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
+
 
 class AuthenticateContoller extends Controller
 {
@@ -39,6 +42,21 @@ class AuthenticateContoller extends Controller
             $customer = auth('sanctum')->user();
 
             return(new ApiResponse())->success(new CustomerMiniDTO($customer));
+        } catch (Exception $exception) {
+            return (new ApiResponse())->exception($exception->getMessage());
+        }
+    }
+
+    public function logout(): JsonResponse
+    {
+        try {
+
+            $customer = auth('sanctum')->user();
+
+            $token = $customer->currentAccessToken();
+            $token->delete();
+
+            return (new ApiResponse())->success();
         } catch (Exception $exception) {
             return (new ApiResponse())->exception($exception->getMessage());
         }
