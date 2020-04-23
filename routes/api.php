@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthenticateContoller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::namespace('API')->name('api.')->group(function ()
 {
+    Route::prefix('auth')->group(function(){
+        Route::post('login', 'AuthenticateContoller@login')->name('login');
+    });
+
     Route::apiResource('categories', 'CategoryController')->only(['index', 'show']);
     Route::apiResource('products', 'ProductController')->only(['index', 'show']);
 
