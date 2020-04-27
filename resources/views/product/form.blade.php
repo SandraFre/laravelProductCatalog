@@ -94,6 +94,15 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="suppliers">Suppliers</label>
+                                @foreach($suppliers as $id => $title)
+                                    <input type="checkbox" id="suppliers" name="suppliers[]" value="{{ $id }}"
+                                           @if(in_array($id, old('suppliers', $supplierIds ?? []))) checked @endif
+                                    > {{ $title }}
+                                @endforeach
+                            </div>
+
+                            <div class="form-group">
                                 <label for="active">Active</label>
                                 <input class="@error('active') is-invalid @enderror" type="checkbox" name="active" id="active"
                                        value="1" @if (old('active', $product->active ?? false)) checked @endif>

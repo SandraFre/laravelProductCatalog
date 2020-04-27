@@ -126,6 +126,11 @@ class ProductStoreRequest extends FormRequest
         return $this->input('categories', []);
     }
 
+    public function getSuppliers()
+    {
+        return $this->input('suppliers', []);
+    }
+
     /**
      * @return array
      */

@@ -39,6 +39,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product whereTitle($value)
  * @method static Builder|Product whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Supply[] $suppliers
+ * @property-read int|null $suppliers_count
  */
 class Product extends Model
 {
@@ -63,6 +65,11 @@ class Product extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_product', 'product_id', 'category_id');
+    }
+
+    public function suppliers(): BelongsToMany
+    {
+        return $this->belongsToMany(Supply::class, 'supply_product');
     }
 
     /**
