@@ -7,6 +7,7 @@ namespace App\Http\Controllers\API;
 
 use App\DTO\CustomerDTO;
 use App\Events\API\CustomerLoginEvent;
+use App\Events\API\CustomerLogoutEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\LoginRequest;
 use App\Http\Requests\API\RegisterRequest;
@@ -74,7 +75,10 @@ class AuthenticationController extends Controller
             $customer = auth('api')->user();
             $token = $customer->tokens->find($tokenId);
 
+
             $token->revoke();
+
+            event(new CustomerLogoutEvent($customer, $tokenId, Carbon::now()));
 
         } catch (Exception $exception) {
             return(new ApiResponse())->exception($exception->getMessage());

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -22,9 +23,11 @@ use Laravel\Passport\HasApiTokens;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\UserAuthLog[] $authLogs
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
+ * @property-read int|null $auth_logs_count
  * @property-read int|null $clients_count
  * @property-read int|null $notifications_count
  * @property-read int|null $tokens_count
@@ -75,4 +78,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function authLogs(): HasMany
+    {
+        return $this->hasMany(UserAuthLog::class);
+    }
 }

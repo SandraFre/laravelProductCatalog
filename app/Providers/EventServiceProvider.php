@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\API\CustomerLoginEvent;
+use App\Events\API\CustomerLogoutEvent;
 use App\Listeners\API\CustomerAuthLogListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -23,6 +24,10 @@ class EventServiceProvider extends ServiceProvider
         CustomerLoginEvent::class=>[
             CustomerAuthLogListener::class,
         ],
+
+        CustomerLogoutEvent::class=>[
+            CustomerAuthLogListener::class,
+        ]
     ];
 
     /**
