@@ -86,12 +86,14 @@
 
                         <div class="form-group">
                             <label for="type">Product type:</label> <br>
-                            @foreach ($types as $key=>$value)
-                                <input type="radio" id="type"
-                                    @if (old('type', $product->type ?? null) == $key)
-                                        checked
-                                    @endif
-                                name="type" value="{{$key}}"> {{$value}}
+                            @foreach ($types as $key=>$enum)
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="type_{{$key}}"
+                                @if (old('type', $product->type ?? null) == $key) checked @endif
+                            name="type" value="{{$key}}">
+                            <label class="form-check-label" for="type_{{$key}}">{{$enum->name()}}</label>
+                                <em>({{$enum->description()}})</em>
+                            </div>
                             @endforeach
                         </div>
 

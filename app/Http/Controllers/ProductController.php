@@ -50,7 +50,7 @@ class ProductController extends Controller
 
         $suppliers = Supply::query()->pluck('title', 'id');
 
-        $types = ProductTypeEnum::options();
+        $types = ProductTypeEnum::enum();
 
         return view('product.form', [
             'categories' => $categories,
@@ -99,7 +99,7 @@ class ProductController extends Controller
 
         $suppliers = Supply::query()->pluck('title', 'id');
 
-        $types = ProductTypeEnum::options();
+        $types = ProductTypeEnum::enum();
 
         return view('product.form', [
             'product' => $product,
