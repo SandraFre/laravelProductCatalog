@@ -40,4 +40,7 @@ class UserAuthLog extends Model
     protected $dates = [
         'event_time',
     ];
+
+    
+
 }
