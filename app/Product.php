@@ -23,10 +23,13 @@ use Illuminate\Support\Carbon;
  * @property string $description
  * @property float $price
  * @property int $active
+ * @property string $type
  * @property-read Collection|Category[] $categories
  * @property-read Collection|ProductImage[] $images
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Supply[] $suppliers
  * @property-read int|null $categories_count
  * @property-read int|null $images_count
+ * @property-read int|null $suppliers_count
  * @method static Builder|Product newModelQuery()
  * @method static Builder|Product newQuery()
  * @method static Builder|Product query()
@@ -37,10 +40,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product wherePrice($value)
  * @method static Builder|Product whereSlug($value)
  * @method static Builder|Product whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Product whereType($value)
  * @method static Builder|Product whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Supply[] $suppliers
- * @property-read int|null $suppliers_count
  */
 class Product extends Model
 {
@@ -53,6 +55,7 @@ class Product extends Model
         'description',
         'price',
         'active',
+        'type',
     ];
 
     protected $casts = [

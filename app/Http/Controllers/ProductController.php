@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Enum\ProductTypeEnum;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Product;
@@ -49,9 +50,12 @@ class ProductController extends Controller
 
         $suppliers = Supply::query()->pluck('title', 'id');
 
+        $types = ProductTypeEnum::options();
+
         return view('product.form', [
             'categories' => $categories,
             'suppliers' => $suppliers,
+            'types' => $types,
         ]);
     }
 
@@ -95,6 +99,7 @@ class ProductController extends Controller
 
         $suppliers = Supply::query()->pluck('title', 'id');
 
+        $types = ProductTypeEnum::options();
 
         return view('product.form', [
             'product' => $product,
@@ -102,6 +107,7 @@ class ProductController extends Controller
             'supplierIds' => $productSupplierIds,
             'categories' => $categories,
             'suppliers' => $suppliers,
+            'types' => $types,
         ]);
     }
 
