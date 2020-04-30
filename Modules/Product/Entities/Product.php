@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\Product\Entities;
 
 use Modules\Product\Entities\Category;
-use App\Supply;
+use Modules\Product\Entities\Supply;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;

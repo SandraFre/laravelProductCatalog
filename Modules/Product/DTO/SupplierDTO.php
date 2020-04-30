@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\DTO;
+namespace Modules\Product\DTO;
 
-use App\Supply;
+use Modules\Product\Entities\Supply;
 use App\DTO\Abstracts\DTO;
 use Illuminate\Support\Facades\Storage;
 

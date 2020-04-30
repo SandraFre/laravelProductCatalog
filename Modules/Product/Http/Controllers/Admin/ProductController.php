@@ -7,7 +7,7 @@ namespace Modules\Product\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Modules\Product\Entities\Category;
 use Modules\Product\Enum\ProductTypeEnum;
-use App\Supply;
+use Modules\Product\Entities\Supply;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;

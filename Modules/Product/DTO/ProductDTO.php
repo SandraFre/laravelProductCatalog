@@ -7,7 +7,6 @@ namespace Modules\Product\DTO;
 use App\DTO\Abstracts\CollectionDTO;
 use Modules\Product\Entities\Product;
 use App\DTO\Abstracts\DTO;
-use App\DTO\SupplierDTO;
 use Illuminate\Support\Facades\Storage;
 
 class ProductDTO extends DTO

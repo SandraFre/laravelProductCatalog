@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace Modules\Product\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryStoreRequest;
-use App\Http\Requests\CategoryUpdateRequest;
+use Modules\Product\Http\Requests\CategoryStoreRequest;
+use Modules\Product\Http\Requests\CategoryUpdateRequest;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
