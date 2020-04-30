@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\DTO;
 
 use App\DTO\Abstracts\CollectionDTO;
-use App\Product;
+use Modules\Product\Entities\Product;
 use App\DTO\Abstracts\DTO;
 use Illuminate\Support\Facades\Storage;
 

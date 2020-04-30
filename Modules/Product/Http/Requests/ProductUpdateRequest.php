@@ -1,16 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace Modules\Product\Http\Requests;
 
-use App\Product;
+use Modules\Product\Entities\Product;
 
-/**
- * Class ProductUpdateRequest
- *
- * @package App\Http\Requests
- */
 class ProductUpdateRequest extends ProductStoreRequest
 {
     /**

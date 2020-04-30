@@ -1,22 +1,14 @@
 <?php
 
-declare(strict_types=1);
+namespace Modules\Product\Http\Requests;
 
-namespace App\Http\Requests;
-
-use App\Enum\ProductTypeEnum;
-use App\Product;
+use Modules\Product\Enum\ProductTypeEnum;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Modules\Product\Entities\Product;
+use Illuminate\Support\Str;
 
-/**
- * Class ProductStoreRequest
- *
- * @package App\Http\Requests
- */
 class ProductStoreRequest extends FormRequest
 {
     /**
@@ -167,7 +159,7 @@ class ProductStoreRequest extends FormRequest
             ->where('slug', '=', $this->getSlug())
             ->exists();
     }
-    
+
     public function getType(): string
     {
         return $this->input('type');

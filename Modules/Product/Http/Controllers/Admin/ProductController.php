@@ -1,29 +1,22 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace Modules\Product\Http\Controllers\Admin;
 
 use App\Category;
-use App\Enum\ProductTypeEnum;
-use App\Http\Requests\ProductStoreRequest;
-use App\Http\Requests\ProductUpdateRequest;
-use App\Product;
+use Modules\Product\Enum\ProductTypeEnum;
 use App\ProductImage;
 use App\Services\ImagesManager;
 use App\Supply;
-use Exception;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Collection;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Modules\Product\Entities\Product;
+use Modules\Product\Http\Requests\ProductStoreRequest;
+use Modules\Product\Http\Requests\ProductUpdateRequest;
 
-/**
- * Class ProductController
- *
- * @package App\Http\Controllers
- */
 class ProductController extends Controller
 {
     /**
@@ -150,5 +143,4 @@ class ProductController extends Controller
         return redirect()->route('products.index')
             ->with('status', 'Product deleted.');
     }
-
 }
