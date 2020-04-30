@@ -28,7 +28,7 @@ class ProductController extends Controller
         $products = Product::query()->with(['images', 'categories'])
             ->paginate();
 
-        return view('product.product-list', [
+        return view('product::product.list', [
             'list' => $products,
         ]);
     }
@@ -45,7 +45,7 @@ class ProductController extends Controller
 
         $types = ProductTypeEnum::enum();
 
-        return view('product.form', [
+        return view('product::product.form', [
             'categories' => $categories,
             'suppliers' => $suppliers,
             'types' => $types,
@@ -94,7 +94,7 @@ class ProductController extends Controller
 
         $types = ProductTypeEnum::enum();
 
-        return view('product.form', [
+        return view('product::product.form', [
             'product' => $product,
             'categoryIds' => $productCategoryIds,
             'supplierIds' => $productSupplierIds,
