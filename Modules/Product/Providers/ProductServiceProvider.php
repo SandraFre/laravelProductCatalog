@@ -2,6 +2,7 @@
 
 namespace Modules\Product\Providers;
 
+use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -26,6 +27,7 @@ class ProductServiceProvider extends ServiceProvider
     {
         $this->registerTranslations();
         $this->registerViews();
+        $this->registerFactories();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
     }
 
@@ -58,6 +60,13 @@ class ProductServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
     }
+
+    public function registerFactories()
+{
+    if (!app()->environment('production') && $this->app->runningInConsole()) {
+        app(Factory::class)->load(module_path($this->moduleName, 'Database/factories'));
+    }
+}
 
     /**
      * Register translations.

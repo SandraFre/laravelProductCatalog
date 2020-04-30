@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Category;
+namespace Modules\Product\Database\Seeders;
+
+use Modules\Product\Entities\Category;
 use Illuminate\Database\Seeder;
 
 class CategoriesTableSeeder extends Seeder

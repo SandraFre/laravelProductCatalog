@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace Modules\Product\Services;
 
-use App\Category;
+use Modules\Product\Entities\Category;
 use App\DTO\Abstracts\CollectionDTO;
-use App\DTO\CategoryDTO;
+use Modules\Product\DTO\CategoryDTO;
 
 class CategoryService
 {

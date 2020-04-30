@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Modules\Product\Http\Controllers\Admin;
 
-use App\Category;
+use App\Http\Controllers\Controller;
+use Modules\Product\Entities\Category;
 use Modules\Product\Enum\ProductTypeEnum;
 use App\Supply;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Modules\Product\Entities\Product;

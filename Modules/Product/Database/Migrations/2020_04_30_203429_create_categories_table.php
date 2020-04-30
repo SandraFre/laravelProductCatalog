@@ -1,33 +1,32 @@
 <?php
-declare(strict_types=1);
 
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-class CreateCategoryProductTable extends Migration
+class CreateCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up(): void
+    public function up()
     {
+        Schema::create('categories', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->timestamps();
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->boolean('active')->default(false);
+        });
+
         Schema::create('category_product', function (Blueprint $table) {
             $table->unsignedBigInteger('product_id');
             $table->bigInteger('category_id')->unsigned();
 
             $table->unique(['product_id', 'category_id']);
 
-
-            /*
-            *CASCADE
-            *RESTRICT
-            *SET NULL
-            *NONE
-            */
             $table->foreign('product_id')
             ->references('id')
             ->on('products')
@@ -47,8 +46,9 @@ class CreateCategoryProductTable extends Migration
      *
      * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('category_product');
+        Schema::dropIfExists('categories');
     }
 }

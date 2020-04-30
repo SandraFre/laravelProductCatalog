@@ -2,15 +2,16 @@
 
 declare(strict_types = 1);
 
-namespace App\Http\Controllers;
+namespace Modules\Product\Http\Controllers\Admin;
 
-use App\Category;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Modules\Product\Entities\Category;
 
 /**
  * Class CategoryController
@@ -26,14 +27,14 @@ class CategoryController extends Controller
         /** @var LengthAwarePaginator $categories */
         $categories = Category::query()->paginate();
 
-        return view('category.list', ['list' => $categories]);
+        return view('product::category.list', ['list' => $categories]);
     }
 
     /**
      * @return View
      */
     public function create(): View {
-        return view('category.form');
+        return view('product::category.form');
     }
 
     /**
@@ -58,7 +59,7 @@ class CategoryController extends Controller
         // SELECT * FROM products WHERE id = ?
         $category = Category::query()->find($id);
 
-        return view('category.form', ['category' => $category]);
+        return view('product::category.form', ['category' => $category]);
     }
 
     /**

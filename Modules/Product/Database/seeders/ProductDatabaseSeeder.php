@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
+namespace Modules\Product\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class InitialDataSeeder extends Seeder
+class ProductDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,8 +13,6 @@ class InitialDataSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            RolesTableSeeder::class,
-        ]);
+        $this->call(CategoriesTableSeeder::class);
     }
 }
