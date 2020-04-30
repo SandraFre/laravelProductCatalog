@@ -6,16 +6,16 @@ namespace Modules\Product\Http\Controllers\Admin;
 
 use App\Category;
 use Modules\Product\Enum\ProductTypeEnum;
-use App\ProductImage;
-use App\Services\ImagesManager;
 use App\Supply;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Modules\Product\Entities\Product;
+use Modules\Product\Entities\ProductImage;
 use Modules\Product\Http\Requests\ProductStoreRequest;
 use Modules\Product\Http\Requests\ProductUpdateRequest;
+use Modules\Product\Services\ImagesManager;
 
 class ProductController extends Controller
 {
