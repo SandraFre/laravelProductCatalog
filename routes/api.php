@@ -30,5 +30,5 @@ Route::namespace('API')->name('api.')->group(function () {
     });
 
     Route::apiResource('categories', 'CategoryController')->only(['index', 'show']);
-    Route::apiResource('products', 'ProductController')->only(['index', 'show']);
+    
 });

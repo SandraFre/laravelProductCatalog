@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\API;
+namespace Modules\Product\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use App\Services\ProductService;
+use Modules\Product\Services\ProductService;
 
 class ProductController extends Controller
 {
