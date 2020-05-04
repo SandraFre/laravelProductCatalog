@@ -4,7 +4,7 @@ namespace Modules\Product\Providers;
 
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\ServiceProvider;
-
+use Modules\Product\Helpers\PriceFormatter;
 
 class ProductServiceProvider extends ServiceProvider
 {
@@ -39,6 +39,8 @@ class ProductServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        $this->bindFacades();
     }
 
 
@@ -105,4 +107,13 @@ class ProductServiceProvider extends ServiceProvider
         }
         return $paths;
     }
+
+    private function bindFacades(): void
+    {
+        $this->app->bind('price-formatter',function (){
+            return new PriceFormatter;
+        });
+    }
+
+
 }
