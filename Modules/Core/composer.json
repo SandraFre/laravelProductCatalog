@@ -1,0 +1,25 @@
+{
+    "name": "SandraF/core",
+    "description": "",
+    "authors": [
+        {
+            "name": "Sandra Freigofe",
+            "email": "sandra.email@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Core\\Providers\\CoreServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Core\\": ""
+        }
+    }
+}

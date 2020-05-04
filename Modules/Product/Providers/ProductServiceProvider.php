@@ -3,8 +3,14 @@
 namespace Modules\Product\Providers;
 
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Modules\Product\Helpers\PriceFormatter;
+use Modules\Product\Repositories\CategoryRepository;
+use Modules\Product\Repositories\ProductRepository;
+use Modules\Product\Repositories\SupplyRepository;
+use Modules\Product\Services\CategoryService;
+use Modules\Product\Services\ProductService;
 
 class ProductServiceProvider extends ServiceProvider
 {
@@ -39,6 +45,8 @@ class ProductServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->registerRepositories();
+        $this->registerServices();
 
         $this->bindFacades();
     }
@@ -100,7 +108,7 @@ class ProductServiceProvider extends ServiceProvider
     private function getPublishableViewPaths(): array
     {
         $paths = [];
-        foreach (\Config::get('view.paths') as $path) {
+        foreach (Config::get('view.paths') as $path) {
             if (is_dir($path . '/modules/' . $this->moduleNameLower)) {
                 $paths[] = $path . '/modules/' . $this->moduleNameLower;
             }
@@ -115,5 +123,17 @@ class ProductServiceProvider extends ServiceProvider
         });
     }
 
+    private function registerRepositories(): void
+    {
+        $this->app->singleton(CategoryRepository::class);
+        $this->app->singleton(ProductRepository::class);
+        $this->app->singleton(SupplyRepository::class);
+    }
+
+    private function registerServices(): void
+    {
+        $this->app->singleton(CategoryService::class);
+        $this->app->singleton(ProductService::class);
+    }
 
 }
