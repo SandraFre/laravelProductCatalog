@@ -57,10 +57,8 @@ abstract class Repository implements RepositoryContract
 
     public function update(array $data, $attributeValue, string $attributeField = self::DEFAULT_ATTRIBUTE_FIELD): int
     {
-        Arr::forget($data, [
-            '_token',
-            '_method',
-        ]);
+        $data = Arr::only($data, $this->makeModel()->getFillable());
+        
 
         return $this->makeQuery()->where($attributeField, '=', $attributeValue)
             ->update($data);
