@@ -1,47 +1,65 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Modules\Product\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Modules\Product\Entities\Category;
-use Modules\Product\Enum\ProductTypeEnum;
-use Modules\Product\Entities\Supply;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use Modules\Product\Entities\Product;
-use Modules\Product\Entities\ProductImage;
+use Modules\Product\Enum\ProductTypeEnum;
+use Modules\Product\Exceptions\ModelRelationMissingException;
 use Modules\Product\Http\Requests\ProductStoreRequest;
 use Modules\Product\Http\Requests\ProductUpdateRequest;
 use Modules\Product\Repositories\CategoryRepository;
-use Modules\Product\Repositories\ProductRepository;
 use Modules\Product\Repositories\SupplyRepository;
-use Modules\Product\Services\ImagesManager;
+use Modules\Product\Services\ProductService;
+use ReflectionException;
 
+/**
+ * Class ProductController
+ * @package Modules\Product\Http\Controllers\Admin
+ */
 class ProductController extends Controller
 {
-    private $productRepository;
+    /**
+     * @var CategoryRepository
+     */
     private $categoryRepository;
+    /**
+     * @var SupplyRepository
+     */
     private $supplyRepository;
+    /**
+     * @var ProductService
+     */
+    private $productService;
 
-    public function __construct(ProductRepository $productRepository, CategoryRepository $categoryRepository, SupplyRepository $supplyRepository)
+    /**
+     * ProductController constructor.
+     * @param ProductService $productService
+     * @param CategoryRepository $categoryRepository
+     * @param SupplyRepository $supplyRepository
+     */
+    public function __construct(
+        ProductService $productService,
+        CategoryRepository $categoryRepository,
+        SupplyRepository $supplyRepository
+    )
     {
-        $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
         $this->supplyRepository = $supplyRepository;
+        $this->productService = $productService;
     }
-
 
     /**
      * @return View
      */
     public function index(): View
     {
-        /** @var LengthAwarePaginator $products */
-        $products = $this->productRepository
-            ->paginateWithRelations(['images', 'categories']);
+        $products = $this->productService->getPaginateWithRelationsAdmin();
 
         return view('product::product.list', [
             'list' => $products,
@@ -50,12 +68,11 @@ class ProductController extends Controller
 
     /**
      * @return View
+     * @throws ReflectionException
      */
     public function create(): View
     {
-        /** @var Collection|Category[] $categories */
         $categories = $this->categoryRepository->all(['id', 'title']);
-
         $suppliers = $this->supplyRepository->pluck('title', 'id');
 
         $types = ProductTypeEnum::enum();
@@ -71,100 +88,112 @@ class ProductController extends Controller
      * @param ProductStoreRequest $request
      *
      * @return RedirectResponse
+     * @throws Exception
      */
     public function store(ProductStoreRequest $request): RedirectResponse
     {
-        $data = $request->getData();
-
-        $catIds = $request->getCategories();
-        $suppliersIds = $request->getSuppliers();
-
-        /** @var Product $product */
-        $product = $this->productRepository->create($data);
-        $product->categories()->sync($catIds);
-        $product->suppliers()->sync($suppliersIds);
-
-        ImagesManager::saveMany(
-            $product,
-            $request->getImages(),
-            ProductImage::class,
-            'file',
-            ImagesManager::PATH_PRODUCT
-        );
+        try {
+            $this->productService->createWithRelationsAdmin(
+                $request->getData(),
+                $request->getCategories(),
+                $request->getSuppliers(),
+                $request->getImages()
+            );
+        } catch (ModelRelationMissingException $exception) {
+            return redirect()->back()
+                ->withInput()
+                ->with('danger', $exception->getMessage());
+        } catch (Exception $exception) {
+            return redirect()->back()
+                ->withInput()
+                ->with('danger', 'Something wrong.');
+        }
 
         return redirect()->route('products.index')
-            ->with('status', 'Product created');
+            ->with('status', 'Product created.');
     }
 
     /**
      * @param int $id
      *
-     * @return View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|RedirectResponse|View
      */
-    public function edit(int $id): View
+    public function edit(int $id)
     {
-        /** @var Product $product */
-        $product = $this->productRepository->find($id);
-        $productCategoryIds = $product->categories()->pluck('id')->toArray();
-        $productSupplierIds = $product->suppliers()->pluck('id')->toArray();
-        /** @var Category $categories */
-        $categories = $this->categoryRepository->all(['id', 'title']);
+        try {
+            $product = $this->productService->getById($id);
+            $productCategoryIds = $product->categories()->pluck('id')->toArray();
+            $productSupplierIds = $product->suppliers()->pluck('id')->toArray();
+            $categories = $this->categoryRepository->all(['id', 'title']);
+            $suppliers = $this->supplyRepository->pluck('title', 'id');
+            $types = ProductTypeEnum::enum();
 
-        $suppliers = $this->supplyRepository->pluck('title', 'id');
-
-        $types = ProductTypeEnum::enum();
-
-        return view('product::product.form', [
-            'product' => $product,
-            'categoryIds' => $productCategoryIds,
-            'supplierIds' => $productSupplierIds,
-            'categories' => $categories,
-            'suppliers' => $suppliers,
-            'types' => $types,
-        ]);
+            return view('product::product.form', [
+                'product' => $product,
+                'categoryIds' => $productCategoryIds,
+                'supplierIds' => $productSupplierIds,
+                'categories' => $categories,
+                'suppliers' => $suppliers,
+                'types' => $types,
+            ]);
+        } catch (ModelNotFoundException $exception) {
+            return redirect()->route('products.index')
+                ->with('danger', 'Record not found.');
+        } catch (Exception $exception) {
+            return redirect()->route('products.index')
+                ->with('danger', 'Something wrong.');
+        }
     }
 
     /**
      * @param ProductUpdateRequest $request
-     * @param Product $product
-     *
+     * @param int $id
      * @return RedirectResponse
      */
-    public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
+    public function update(ProductUpdateRequest $request, int $id): RedirectResponse
     {
-        $data = $request->getData();
-        $catIds = $request->getCategories();
-        $suppliersIds = $request->getSuppliers();
-
-        $this->productRepository->update($data, $product->id);
-        $product->categories()->sync($catIds);
-        $product->suppliers()->sync($suppliersIds);
-
-        ImagesManager::saveMany(
-            $product,
-            $request->getImages(),
-            ProductImage::class,
-            'file',
-            ImagesManager::PATH_PRODUCT,
-            $request->getDeleteImages()
-        );
+        try {
+            $this->productService->updateWithRelationsAdmin(
+                $request->getData(),
+                $id,
+                $request->getDeleteImages()
+            );
+        } catch (ModelNotFoundException $exception) {
+            return redirect()->back()
+                ->withInput()
+                ->with('danger', 'Record not found.');
+        } catch (ModelRelationMissingException $exception) {
+            return redirect()->back()
+                ->withInput()
+                ->with('danger', $exception->getMessage());
+        } catch (Exception $exception) {
+            return redirect()->back()
+                ->withInput()
+                ->with('danger', 'Something wrong.');
+        }
 
         return redirect()->route('products.index')
             ->with('status', 'Product updated.');
     }
 
     /**
-     * @param Product $product
+     * @param int $id
      * @return RedirectResponse
-     * @throws Exception
      */
-    public function destroy(Product $product): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
-        Storage::delete(
-            $product->images->pluck('file')->toArray()
-        );
-
-        $this->productRepository->delete($product->id);
+        try {
+            $this->productService->delete($id);
+        } catch (ModelNotFoundException $exception) {
+            return redirect()->route('products.index')
+                ->with('danger', 'Record not found.');
+        } catch (ModelRelationMissingException $exception) {
+            return redirect()->route('products.index')
+                ->with('danger', $exception->getMessage());
+        } catch (Exception $exception) {
+            return redirect()->route('products.index')
+                ->with('danger', 'Something wrong.');
+        }
 
         return redirect()->route('products.index')
             ->with('status', 'Product deleted.');

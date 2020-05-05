@@ -78,6 +78,7 @@ class ProductStoreRequest extends FormRequest
             'price' => $this->getPrice(),
             'active' => $this->getActive(),
             'type' =>$this->getType(),
+            
         ];
     }
 

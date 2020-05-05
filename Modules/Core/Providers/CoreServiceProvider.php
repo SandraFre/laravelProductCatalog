@@ -35,9 +35,9 @@ class CoreServiceProvider extends ServiceProvider
      *
      * @return array
      */
-    public function provides(): array
+    public function provides()
     {
 
     }
 
-
+}

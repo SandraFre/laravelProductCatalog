@@ -30,6 +30,11 @@ abstract class Repository implements RepositoryContract
         return $this->makeQuery()->find($id);
     }
 
+    public function findOrFail(int $id): Model
+    {
+        return $this->makeQuery()->findOrFail($id);
+    }
+
     public function pluck(string $column, ?string $key = null): Collection
     {
         return $this->makeQuery()->pluck($column, $key);

@@ -33,6 +33,18 @@ class ProductUpdateRequest extends ProductStoreRequest
         );
     }
 
+    public function getData(): array
+    {
+        return array_merge(
+            parent::getData(),
+            [
+                'categories'=>$this->getCategories(),
+                'suppliers'=>$this->getSuppliers(),
+                'images'=>$this->getImages(),
+            ]
+            );
+    }
+
     /**
      * @return bool
      */
@@ -40,7 +52,7 @@ class ProductUpdateRequest extends ProductStoreRequest
     {
         return Product::query()
             ->where('slug', '=', $this->getSlug())
-            ->where('id', '!=', $this->route()->parameter('product')->id)
+            ->where('id', '!=', $this->route()->parameter('product'))
             ->exists();
     }
 
