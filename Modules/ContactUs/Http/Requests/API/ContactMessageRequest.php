@@ -1,5 +1,6 @@
 <?php
-declare (strict_types=1);
+
+declare(strict_types=1);
 
 namespace Modules\ContactUs\Http\Requests\API;
 
@@ -12,7 +13,7 @@ class ContactMessageRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => 'nullable|max:100',
@@ -26,8 +27,32 @@ class ContactMessageRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
+    }
+
+    public function getData(): array
+    {
+        return [
+            'client_name' => $this->getClientName(),
+            'client_email' => $this->getClientEmail(),
+            'message' => $this->getMessage(),
+        ];
+    }
+
+    private function getClientName(): ?string
+    {
+        return $this->input('name');
+    }
+
+    private function getClientEmail(): string
+    {
+        return $this->input('email');
+    }
+
+    private function getMessage(): string
+    {
+        return $this->input('message');
     }
 }

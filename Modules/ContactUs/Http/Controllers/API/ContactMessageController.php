@@ -4,14 +4,24 @@ declare(strict_types=1);
 
 namespace Modules\ContactUs\Http\Controllers\API;
 
+use App\Http\Responses\ApiResponse;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\ContactUs\Http\Requests\API\ContactMessageRequest;
+use Modules\ContactUs\Services\ContactMessageService;
 
 class ContactMessageController extends Controller
 {
+
+    private $messageService;
+
+    public function __construct(ContactMessageService $messageService)
+    {
+        $this->messageService = $messageService;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -20,7 +30,13 @@ class ContactMessageController extends Controller
      */
     public function store(ContactMessageRequest $request): JsonResponse
     {
-        //
-    }
 
+        try {
+            $this->messageService->storeData($request->getData());
+        } catch (Exception $exception) {
+            return (new ApiResponse())->exception();
+        }
+
+        return (new ApiResponse())->success();
+    }
 }
