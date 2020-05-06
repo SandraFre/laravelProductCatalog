@@ -1,0 +1,25 @@
+{
+    "name": "SandraF/contactus",
+    "description": "",
+    "authors": [
+        {
+            "name": "Sandra Freigofe",
+            "email": "sandra.email@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\ContactUs\\Providers\\ContactUsServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\ContactUs\\": ""
+        }
+    }
+}
