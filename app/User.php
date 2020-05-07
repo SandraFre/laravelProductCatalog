@@ -23,6 +23,9 @@ use Laravel\Passport\HasApiTokens;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property string|null $last_name
+ * @property string|null $mobile
+ * @property string|null $address
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\UserAuthLog[] $authLogs
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
@@ -42,6 +45,9 @@ use Laravel\Passport\HasApiTokens;
  * @method static Builder|User wherePassword($value)
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereMobile($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -57,6 +63,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'last_name',
+        'mobile',
+        'address',
     ];
 
     /**
