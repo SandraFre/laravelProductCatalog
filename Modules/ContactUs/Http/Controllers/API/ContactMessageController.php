@@ -41,7 +41,7 @@ class ContactMessageController extends Controller
             return (new ApiResponse())->exception();
         }
 
-        NewMessageJob::dispatch($message)->onQueue('email');
+        NewMessageJob::dispatch($message)->onQueue('mail');
 
         $finish = microtime(true) - $start;
 
