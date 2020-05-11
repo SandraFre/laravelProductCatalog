@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace  Modules\Customer\DTO;
 
 use App\DTO\Abstracts\DTO;
-use App\Enum\CustomerAuthLogTypeEnum;
+use Modules\Customer\Enum\CustomerAuthLogTypeEnum;
 use App\UserAuthLog;
 
 class CustomerAuthLogDTO extends DTO

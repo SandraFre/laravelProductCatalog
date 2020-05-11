@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Enum;
+namespace Modules\Customer\Enum;
 
-use App\Enum\Abstracts\Enumerable;
+use Modules\Core\Enum\Enumerable;
 
 class CustomerAuthLogTypeEnum extends Enumerable
 {

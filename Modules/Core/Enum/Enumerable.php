@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Enum\Abstracts;
+namespace Modules\Core\Enum;
 
 use Modules\Core\Exceptions\EnumNotFoundException;
 use ReflectionClass;
