@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\DTO\Abstracts;
+namespace Modules\Core\DTO;
 
-use App\DTO\Abstracts\DTO;
+use Modules\Core\DTO\DTO;
 
 class PaginateDTO extends DTO
 {

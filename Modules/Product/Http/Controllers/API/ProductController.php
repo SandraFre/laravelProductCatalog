@@ -45,15 +45,15 @@ class ProductController extends Controller
     public function show(string $slug): JsonResponse
     {
         try {
-            $productDTO = $this->productService->getBySlugApi($slug);
+            $productDTO = $this->productService->getBySlugForApi($slug);
 
             return(new ApiResponse())->success($productDTO);
                 } catch (ModelNotFoundException $exception) {
                     return (new ApiResponse())->modelNotFound();
-        } catch (\Throwable $th) {
+        } catch (\Throwable $exception) {
             logger()->error($exception->getMessage());
 
-            return (new ApiResponse())->exception();
+            return (new ApiResponse())->exception($exception->getMessage());
         }
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Modules\Product\DTO;
 
-use App\DTO\Abstracts\CollectionDTO;
+use Modules\Core\DTO\CollectionDTO;
 use Modules\Product\Entities\Product;
-use App\DTO\Abstracts\DTO;
+use Modules\Core\DTO\DTO;
 use Illuminate\Support\Facades\Storage;
 use Modules\Product\Facades\PriceFormatter;
 

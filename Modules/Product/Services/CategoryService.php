@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\Product\Services;
 
 use Modules\Product\Entities\Category;
-use App\DTO\Abstracts\CollectionDTO;
+use Modules\Core\DTO\CollectionDTO;
 use Modules\Product\DTO\CategoryDTO;
 
 class CategoryService

@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Modules\Product\DTO;
 
 
-use App\DTO\Abstracts\DTO;
+use Modules\Core\DTO\DTO;
 use Modules\Product\Entities\Category;
 
 /**
