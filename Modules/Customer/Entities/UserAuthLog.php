@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Modules\Customer\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,6 +41,6 @@ class UserAuthLog extends Model
         'event_time',
     ];
 
-    
+
 
 }

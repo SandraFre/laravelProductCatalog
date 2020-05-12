@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events\API\Contracts;
+namespace Modules\Customer\Events\API\Contracts;
 
 interface CustomerAuthContract
 {

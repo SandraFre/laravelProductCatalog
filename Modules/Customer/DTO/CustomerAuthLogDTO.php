@@ -6,7 +6,7 @@ namespace  Modules\Customer\DTO;
 
 use Modules\Core\DTO\DTO;
 use Modules\Customer\Enum\CustomerAuthLogTypeEnum;
-use App\UserAuthLog;
+use Modules\Customer\Entities\UserAuthLog;
 
 class CustomerAuthLogDTO extends DTO
 {

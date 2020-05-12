@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace Modules\Customer\Http\Controllers\Admin;
 
-use App\Http\Requests\CustomerStoreRequest;
-use App\Http\Requests\CustomerUpdateRequest;
+use App\Http\Controllers\Controller;
+use Modules\Customer\Http\Requests\Admin\CustomerStoreRequest;
+use Modules\Customer\Http\Requests\Admin\CustomerUpdateRequest;
 use App\User;
 use Exception;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 /**
@@ -25,12 +24,12 @@ class CustomerController extends Controller
     {
         $users = User::query()->paginate();
 
-        return view('customer.list', ['list' => $users]);
+        return view('customer::customer.list', ['list' => $users]);
     }
 
     public function create(): View
     {
-        return view('customer.form');
+        return view('customer::customer.form');
     }
 
     public function store(CustomerStoreRequest $request): RedirectResponse
@@ -48,14 +47,14 @@ class CustomerController extends Controller
 
     public function show(User $customer): View
     {
-        return view('customer.view', [
+        return view('customer::customer.view', [
             'item' => $customer,
         ]);
     }
 
     public function edit(User $customer): View
     {
-        return view('customer.form', ['customer' => $customer]);
+        return view('customer::customer.form', ['customer' => $customer]);
     }
 
     /**

@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 
-namespace App\Http\Controllers\API;
+namespace Modules\Customer\Http\Controllers\API\Auth;
 
 use Modules\Customer\DTO\CustomerDTO;
-use App\Events\API\CustomerLoginEvent;
-use App\Events\API\CustomerLogoutEvent;
+use Modules\Customer\Events\API\CustomerLoginEvent;
+use Modules\Customer\Events\API\CustomerLogoutEvent;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\API\LoginRequest;
-use App\Http\Requests\API\RegisterRequest;
+use Modules\Customer\Http\Requests\API\LoginRequest;
+use Modules\Customer\Http\Requests\API\RegisterRequest;
 use App\Http\Responses\ApiResponse;
 use App\User;
 use Exception;

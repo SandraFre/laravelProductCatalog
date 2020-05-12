@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\API;
+namespace Modules\Customer\Http\Requests\API;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
@@ -47,7 +47,7 @@ class RegisterRequest extends LoginRequest
         return $this->input('name');
     }
 
-    
+
     private function getCustomerPassword(): string
     {
         return Hash::make((string) $this->input('password'));

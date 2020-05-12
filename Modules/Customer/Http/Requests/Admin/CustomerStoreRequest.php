@@ -1,21 +1,22 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace Modules\Customer\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
-class CustomerUpdateRequest extends FormRequest
+class CustomerStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize(): bool {
+    public function authorize()
+    {
         return true;
     }
 
@@ -24,7 +25,8 @@ class CustomerUpdateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array {
+    public function rules()
+    {
         return [
             'name' => 'required|string|max:255',
             'email' => [
@@ -32,31 +34,33 @@ class CustomerUpdateRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->route()->parameter('customer')->id),
+                Rule::unique('users'),
             ],
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'required|nullable|string|min:8|confirmed',
         ];
     }
 
-    public function getName(): string
+    public function getData(): array
+    {
+        return [
+            'name' => $this->getName(),
+            'email' => $this->getEmail(),
+            'password' => $this->getHashPassword(),
+        ];
+    }
+
+    private function getName(): string
     {
         return $this->input('name');
     }
 
-    public function getEmail(): string
+    private function getEmail(): string
     {
         return $this->input('email');
     }
 
-    public function getHashPassword(): ?string
+    private function getHashPassword(): string
     {
-        $pass = $this->input('password');
-
-        if ($pass !==null) {
-           $pass = Hash::make($pass);
-        }
-
-        return $pass;
+        return Hash::make($this->input('password'));
     }
-
 }

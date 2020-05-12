@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Events\API\Abstracts;
+namespace Modules\Customer\Events\API\Abstracts;
 
-use App\Events\API\Contracts\CustomerAuthContract as ContractsCustomerAuthContract;
+use Modules\Customer\Events\API\Contracts\CustomerAuthContract;
 use App\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable as EventsDispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 
-abstract class CustomerAuthAbstract implements ContractsCustomerAuthContract
+abstract class CustomerAuthAbstract implements CustomerAuthContract
 {
     use EventsDispatchable, InteractsWithSockets, SerializesModels;
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Requests\API;
+namespace Modules\Customer\Http\Requests\API;
 
 use Illuminate\Foundation\Http\FormRequest;
 

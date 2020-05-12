@@ -11,4 +11,9 @@
 |
 */
 
+use App\Http\Middleware\RouteAccessMiddleware;
+use Illuminate\Support\Facades\Route;
 
+Route::middleware(['auth:admin', RouteAccessMiddleware::ALIAS])->namespace('Admin')->group(function () {
+    Route::resource('customers', 'CustomerController');
+});

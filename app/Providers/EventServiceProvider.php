@@ -4,8 +4,7 @@ namespace App\Providers;
 
 use App\Events\API\CustomerLoginEvent;
 use App\Events\API\CustomerLogoutEvent;
-use App\Listeners\API\CustomerAuthLogListener;
-use App\Listeners\API\CustomerAuthLogSubscriber;
+use Modules\Customer\Listeners\API\CustomerAuthLogListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -31,9 +30,7 @@ class EventServiceProvider extends ServiceProvider
         ]*/
     ];
 
-    protected $subscribe = [
-        CustomerAuthLogSubscriber::class
-    ];
+
 
     /**
      * Register any events for your application.
