@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Modules\Core\Tests\Unit;
 
 use Tests\TestCase;
@@ -15,7 +17,7 @@ class EnumerableTest extends TestCase
      *
      * @return void
      */
-    public function testIdAndNameGettersReturnCorrectData():void
+    public function testIdAndNameGettersReturnCorrectData(): void
     {
         $enum = TestEnum::testCase();
 
@@ -37,7 +39,7 @@ class EnumerableTest extends TestCase
         $this->assertSame($enumOne, $enumTwo);
     }
 
-    public function testReturnOnlyFinalPublicStaticMethods():void
+    public function testReturnOnlyFinalPublicStaticMethods(): void
     {
         $enum = TestEnum::enum();
 
@@ -49,7 +51,7 @@ class EnumerableTest extends TestCase
         $this->assertSame(TestEnum::testCaseTwo(), $enum['test_id_2']);
     }
 
-    public function testCanCreateCasesFromId():void
+    public function testCanCreateCasesFromId(): void
     {
         $this->assertSame(TestEnum::testCase(), TestEnum::from('test_id'));
         $this->assertSame(TestEnum::testCaseTwo(), TestEnum::from('test_id_2'));
@@ -61,6 +63,42 @@ class EnumerableTest extends TestCase
         $this->expectExceptionMessage('Unable to find enumerable with test_enum of type ' . TestEnum::class);
 
         TestEnum::from('test_enum');
+    }
+
+    public function testOptionsReturnOnlyFinalPublicStaticMethods(): void
+    {
+        $this->assertEquals(
+            [
+                'test_id' => 'test_name',
+                'test_id_2' => 'test_name_2',
+                'test_id_d' => 'Description Name',
+            ],
+            TestEnum::options()
+        );
+    }
+
+    public function testJsonReturnOnlyPublicStaticMethods(): void
+    {
+        $this->assertJsonStringEqualsJsonString(
+            json_encode([
+                'test_id' => 'test_name',
+                'test_id_2' => 'test_name_2',
+                'test_id_d' => 'Description Name',
+            ]),
+            TestEnum::json()
+        );
+    }
+
+    public function testEnumIdsReturnOnlyFinalMethodsIdsAsArray(): void
+    {
+        $this->assertEquals(
+            [
+                'test_id',
+                'test_id_2',
+                'test_id_d',
+            ],
+            TestEnum::enumIds()
+        );
     }
 }
 
@@ -85,5 +123,4 @@ class TestEnum extends Enumerable
     {
         return self::make('random_id', 'random_name');
     }
-
 }

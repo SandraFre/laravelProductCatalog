@@ -54,6 +54,11 @@ abstract class Enumerable
         return $return;
     }
 
+    public static function json(): string
+    {
+        return json_encode(self::options());
+    }
+
     public static function options():array
     {
         return array_map(function(Enumerable $enumerable){
