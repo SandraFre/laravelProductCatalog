@@ -45,6 +45,6 @@ class ContactMessageController extends Controller
 
         $finish = microtime(true) - $start;
 
-        return (new ApiResponse())->success(['time'=>$finish]);
+        return (new ApiResponse())->success();
     }
 }
