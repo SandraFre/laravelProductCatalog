@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Modules\Customer\Tests\Unit\Services;
 
 use App\User;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Modules\Customer\DTO\CustomerFullDTO;
 use Modules\Customer\Exceptions\CustomerException;
 use Modules\Customer\Services\CustomerService;
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CustomerServiceTest extends TestCase
 {
@@ -18,13 +21,17 @@ class CustomerServiceTest extends TestCase
      * @group service
      * @group customer
      * @group customer_service
+     *
+     * @throws BindingResolutionException
+     * @throws CustomerException
      */
     public function testSuccessGetMyInfoApi(): void
     {
-        $customer = factory(User::class)->create();
+        /** @var User $customer */
+        $customer = factory(User::class)->make();
         $this->actingAs($customer, 'api');
 
-        $customerDTO = $this->getTestClassInstance()->getMyInfoAPi();
+        $customerDTO = $this->getTestClassInstance()->getMyInfoApi();
 
         $this->assertInstanceOf(CustomerFullDTO::class, $customerDTO);
 
@@ -35,28 +42,33 @@ class CustomerServiceTest extends TestCase
      * @group service
      * @group customer
      * @group customer_service
+     *
+     * @throws BindingResolutionException
      */
     public function testThrowCustomerExceptionOnGetMyInfoApi(): void
     {
         $this->expectException(CustomerException::class);
         $this->expectExceptionMessage(CustomerException::noCustomer()->getMessage());
 
-        $this->getTestClassInstance()->getMyInfoAPi();
+        $this->getTestClassInstance()->getMyInfoApi();
     }
 
     /**
      * @group service
      * @group customer
      * @group customer_service
+     *
+     * @throws BindingResolutionException
+     * @throws CustomerException
      */
     public function testUpdateMyInfoApi(): void
     {
         $updateData = [
-            'name' => 'Josua',
+            'name' => 'Josue',
         ];
 
         $customer = factory(User::class)->create([
-            'name' => 'Tom',
+            'name' => 'John',
         ]);
 
         $this->actingAs($customer, 'api');
@@ -70,15 +82,18 @@ class CustomerServiceTest extends TestCase
      * @group service
      * @group customer
      * @group customer_service
+     *
+     * @throws BindingResolutionException
      */
     public function testUpdateInfo(): void
     {
         $updateData = [
-            'name' => 'Josua',
+            'name' => 'Josue',
         ];
 
+        /** @var User $customer */
         $customer = factory(User::class)->create([
-            'name' => 'Tom',
+            'name' => 'John',
         ]);
 
         $result = $this->getTestClassInstance()->updateInfo($updateData, $customer->id);
@@ -90,6 +105,9 @@ class CustomerServiceTest extends TestCase
      * @group service
      * @group customer
      * @group customer_service
+     *
+     * @throws BindingResolutionException
+     * @throws CustomerException
      */
     public function testSuccessDeleteMe(): void
     {
@@ -102,7 +120,44 @@ class CustomerServiceTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
+    /**
+     * @group service
+     * @group customer
+     * @group customer_service
+     *
+     * @throws BindingResolutionException
+     */
+    public function testThrowCustomerExceptionOnDeleteMe(): void
+    {
+        $this->expectException(CustomerException::class);
+        $this->expectExceptionMessage(CustomerException::noCustomer()->getMessage());
 
+        $this->getTestClassInstance()->deleteMe();
+    }
+
+    /**
+     * @group service
+     * @group customer1
+     * @group customer_service
+     *
+     * @throws BindingResolutionException
+     */
+    public function testCreate(): void
+    {
+        /** @var User $customer */
+        $customer = factory(User::class)->make();
+        $data = $customer->only('name', 'email', 'password');
+
+        $result = $this->getTestClassInstance()->create($data);
+
+        $this->assertInstanceOf(User::class, $result);
+        $this->assertArrayHasKey('id', $result);
+    }
+
+    /**
+     * @return CustomerService
+     * @throws BindingResolutionException
+     */
     private function getTestClassInstance(): CustomerService
     {
         return $this->app->make(CustomerService::class);
