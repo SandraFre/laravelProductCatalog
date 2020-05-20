@@ -6,6 +6,8 @@
             <directory suffix="Test.php">./Modules/Core/tests/Unit</directory>
             <directory suffix="Test.php">./Modules/ContactUs/tests/Unit</directory>
             <directory suffix="Test.php">./Modules/Customer/tests/Unit</directory>
+            <directory suffix="Test.php">./Modules/Product/tests/Unit</directory>
+
 
         </testsuite>
 
