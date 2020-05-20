@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Product\Enum;
 
-use App\Enum\Abstracts\Enumerable;
+use Modules\Core\Enum\Enumerable;
 use ReflectionException;
 
 class ProductTypeEnum extends Enumerable
