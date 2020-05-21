@@ -6,6 +6,7 @@ namespace Modules\Product\Tests\Unit\Repositories;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Modules\Product\Entities\Category;
 use Modules\Product\Entities\Product;
@@ -139,6 +140,45 @@ class ProductRepositoryTest extends TestCase
             $this->assertTrue(in_array($product->id, $productIds));
         }
     }
+
+    /**
+     * @group product
+     * @group repository
+     *
+     * @throws BindingResolutionException
+     */
+    public function testFailGetBySlug(): void
+    {
+        $slug = $this->faker->slug;
+
+        $this->expectException(ModelNotFoundException::class);
+
+        $this->getTestClassInstance()->getBySlug($slug);
+    }
+
+    /**
+     * @group product-l
+     * @group repository
+     *
+     * @throws BindingResolutionException
+     */
+    public function testSuccessGetBySlug(): void
+    {
+        factory(Product::class)->create();
+
+        $product = factory(Product::class, 3)
+        ->create(['active' => true])
+        ->first();
+
+        $result = $this->getTestClassInstance()->getBySlug($product->slug);
+
+        $this->assertInstanceOf(Product::class, $result);
+
+        $this->assertEquals($product->id, $result->id);
+        $this->assertEquals($product->title, $result->title);
+        $this->assertEquals($product->slug, $result->slug);
+    }
+
 
     /**
      * @return ProductRepository
