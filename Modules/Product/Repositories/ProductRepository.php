@@ -61,6 +61,48 @@ class ProductRepository extends Repository
     }
 
     /**
+     * @param array $data
+     * @param array $relatedData
+     * @return Product
+     */
+    public function createWithManyToManyRelations(array $data, array $relatedData = []): Product
+    {
+        /** @var Product $product */
+        $product = $this->create($data);
+
+        foreach ($relatedData as $relation => $ids) {
+            if (!method_exists($product, $relation)) {
+                continue;
+            }
+
+            $product->$relation()->sync($ids);
+        }
+
+        return $product;
+    }
+
+    public function updateWithManyToManyRelations(int $id, array $data = [], array $relatedData = []): Product
+    {
+        $product = $this->findOrFail($id);
+
+        if (!empty($data)) {
+            $product->update($data);
+        }
+
+        foreach ($relatedData as $relation => $ids) {
+            if (!method_exists($product, $relation)) {
+                continue;
+            }
+
+            $product->$relation()->sync($ids);
+        }
+
+
+        return $product;
+
+    }
+
+    /**
      * @param array $with
      * @param bool $active
      * @return Builder

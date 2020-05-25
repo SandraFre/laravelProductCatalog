@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Modules\Product\Tests\Unit\Repositories;
 
@@ -131,7 +131,6 @@ class ProductRepositoryTest extends TestCase
 
         $this->assertCount($productCount, $products);
 
-
         foreach ($products as $product) {
             $this->assertTrue($product->relationLoaded('images'));
             $this->assertTrue($product->relationLoaded('categories'));
@@ -157,7 +156,7 @@ class ProductRepositoryTest extends TestCase
     }
 
     /**
-     * @group product-l
+     * @group product
      * @group repository
      *
      * @throws BindingResolutionException
@@ -166,19 +165,84 @@ class ProductRepositoryTest extends TestCase
     {
         factory(Product::class)->create();
 
+        /** @var Product $product */
         $product = factory(Product::class, 3)
-        ->create(['active' => true])
-        ->first();
+            ->create(['active' => true])
+            ->first();
 
+        /** @var Product $result */
         $result = $this->getTestClassInstance()->getBySlug($product->slug);
 
         $this->assertInstanceOf(Product::class, $result);
 
-        $this->assertEquals($product->id, $result->id);
+        $this->assertEquals($product->id, $result->id, 'Product IDs');
         $this->assertEquals($product->title, $result->title);
         $this->assertEquals($product->slug, $result->slug);
+        $this->assertEquals($product->active, $result->active);
     }
 
+    /**
+     * @group product
+     * @group repository
+     *
+     * @throws BindingResolutionException
+     */
+    public function testCreateWithRelations(): void
+    {
+        /** @var Collection|Category[] $categories */
+        $categories = factory(Category::class, 2)->create();
+
+        $productData = factory(Product::class)->make()
+            ->toArray();
+
+        $categoryIds = $categories->pluck('id')->toArray();
+
+        $relatedData = [
+            'categories' => $categoryIds,
+        ];
+
+        $result = $this->getTestClassInstance()->createWithManyToManyRelations(
+            $productData,
+            $relatedData
+        );
+
+        $this->assertInstanceOf(Product::class, $result);
+        $this->assertDatabaseHas('products', $productData);
+        $this->assertEquals($categoryIds, $result->categories->pluck('id')->toArray());
+    }
+
+    /**
+     * @group product
+     * @group repository
+     *
+     * @throws BindingResolutionException
+     */
+    public function testUpdateWithManyToManyRelations(): void
+    {
+        $updatedTitle = 'Updated Product';
+
+        $category1 = factory(Category::class)->create();
+        $category2 = factory(Category::class)->create();
+
+        $product = factory(Product::class)->create([
+            'title' => 'Test Product'
+        ]);
+        $product->categories()->attach([$category1->id]);
+
+        $result = $this->getTestClassInstance()->updateWithManyToManyRelations($product->id, [
+            'title' => $updatedTitle
+        ], [
+            'categories' => [$category2->id],
+        ]);
+
+        $this->assertInstanceOf(Product::class, $result);
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'title' => $updatedTitle,
+        ]);
+
+        $this->assertEquals([$category2->id], $result->categories->pluck('id')->toArray());
+    }
 
     /**
      * @return ProductRepository

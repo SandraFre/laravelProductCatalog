@@ -7,7 +7,6 @@ namespace Modules\Product\Services;
 use Modules\Core\DTO\CollectionDTO;
 use Modules\Core\DTO\PaginateLengthAwareDTO;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Modules\Product\DTO\ProductDTO;
@@ -59,10 +58,12 @@ class ProductService
         array $images = []
     ): Product
     {
-        /** @var Product $product */
-        $product = $this->productRepository->create($data);
-        $product->categories()->sync($catIds);
-        $product->suppliers()->sync($supplierIds);
+        $relations = [
+            'categories' => $catIds,
+            'suppliers' => $supplierIds,
+        ];
+
+        $product = $this->productRepository->createWithManyToManyRelations($data, $relations);
 
         ImagesManager::saveMany($product, $images, ProductImage::class,
             'file', ImagesManager::PATH_PRODUCT);
@@ -83,12 +84,12 @@ class ProductService
         bool $deleteImages = false
     ): Product
     {
-        $this->productRepository->update($data, $id);
+        $relatedData = [
+            'categories' => Arr::get($data, 'categories', []),
+            'suppliers' => Arr::get($data, 'suppliers', []),
+        ];
 
-        $product = $this->getById($id);
-
-        $product->categories()->sync(Arr::get($data, 'categories', []));
-        $product->suppliers()->sync(Arr::get($data, 'suppliers', []));
+        $product = $this->productRepository->updateWithManyToManyRelations($id, $data, $relatedData);
 
         $images = Arr::get($data, 'images', []);
 
@@ -113,9 +114,7 @@ class ProductService
     public function delete(int $id): void
     {
         $product = $this->getById($id);
-
         ImagesManager::deleteAll($product);
-
         $this->productRepository->delete($id);
     }
 
@@ -129,7 +128,6 @@ class ProductService
 
         return new ProductDTO($product);
     }
-
 
     /**
      * @return PaginateLengthAwareDTO
@@ -148,7 +146,7 @@ class ProductService
     }
 
     /**
-     * @param string $slug
+     * @param string $categorySlug
      * @return PaginateLengthAwareDTO
      */
     public function getPaginateByCategorySlugForApi(string $categorySlug): PaginateLengthAwareDTO
