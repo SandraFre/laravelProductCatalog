@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\Product\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Responses\ApiResponse;
+use Modules\Core\Responses\ApiResponse;
 use Modules\Product\Services\CategoryService;
 use Modules\Product\Services\ProductService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\ContactUs\Http\Controllers\API;
 
-use App\Http\Responses\ApiResponse;
+use Modules\Core\Responses\ApiResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

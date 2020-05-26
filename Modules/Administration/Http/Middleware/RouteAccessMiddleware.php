@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Modules\Administration\Http\Middleware;
 
-use App\Services\RouteAccessManager;
+use Modules\Administration\Services\RouteAccessManager;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;

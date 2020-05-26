@@ -1,6 +1,6 @@
 <?php
 
-use App\Admin;
+use Modules\Administration\Entities\Admin;
 
 return [
 

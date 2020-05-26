@@ -5,6 +5,8 @@ namespace Modules\Administration\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Config;
+use Modules\Administration\Console\AdminCreate;
+use Modules\Administration\Console\ClearRouteAccessCache;
 
 class AdministrationServiceProvider extends ServiceProvider
 {
@@ -30,6 +32,7 @@ class AdministrationServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+        $this->loadHelpers();
     }
 
     /**
@@ -39,6 +42,11 @@ class AdministrationServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->commands([
+            AdminCreate::class,
+            ClearRouteAccessCache::class,
+        ]);
+
         $this->app->register(RouteServiceProvider::class);
     }
 
@@ -122,5 +130,10 @@ class AdministrationServiceProvider extends ServiceProvider
             }
         }
         return $paths;
+    }
+
+    private function loadHelpers(): void
+    {
+        include_once __DIR__ . '/../Helpers/route_helper.php';
     }
 }

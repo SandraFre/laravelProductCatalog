@@ -2,7 +2,7 @@
 
 namespace Modules\Customer\Http\Controllers\API;
 
-use App\Http\Responses\ApiResponse;
+use Modules\Core\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

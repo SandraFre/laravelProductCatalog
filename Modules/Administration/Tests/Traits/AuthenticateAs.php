@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace Modules\Administration\Tests\Traits;
 
-use App\Admin;
-use App\Roles;
+use Modules\Administration\Entities\Admin;
+use Modules\Administration\Entities\Roles;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 trait AuthenticateAs

@@ -6,7 +6,7 @@ namespace Modules\Customer\Http\Controllers\API\Auth;
 
 use Modules\Customer\DTO\CustomerDTO;
 use App\Http\Controllers\Controller;
-use App\Http\Responses\ApiResponse;
+use Modules\Core\Responses\ApiResponse;
 use App\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
