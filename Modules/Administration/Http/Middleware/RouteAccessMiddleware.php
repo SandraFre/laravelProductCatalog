@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Http\Middleware;
+namespace Modules\Administration\Http\Middleware;
 
 use App\Services\RouteAccessManager;
 use Closure;
@@ -45,7 +45,7 @@ class RouteAccessMiddleware
     public function handle(Request $request, Closure $next)
     {
         if ($this->shouldBlockAccess()) {
-            return redirect()->route('home')
+            return redirect()->route('index')
                 ->with('danger', self::ACCESS_NOT_ALLOWED_MESSAGE);
         }
 

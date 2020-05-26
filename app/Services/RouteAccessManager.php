@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Services;
 
-use App\Http\Middleware\RouteAccessMiddleware;
+use Modules\Administration\Http\Middleware\RouteAccessMiddleware;
 use App\Roles;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Routing\Route as RoutingRoute;
