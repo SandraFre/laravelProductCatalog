@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Api\Http\Middleware\ApiPrivateMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::namespace('API')->name('api.')->group(function () {
+Route::middleware(ApiPrivateMiddleware::class)->namespace('API')->name('api.')->group(function () {
     Route::apiResource('contact-us', 'ContactMessageController')->only(['store']);
 });

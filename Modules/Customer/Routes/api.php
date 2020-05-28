@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Api\Http\Middleware\ApiPrivateMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::namespace('API')->name('api.')->group(function () {
+Route::middleware(ApiPrivateMiddleware::class)->namespace('API')->name('api.')->group(function () {
     Route::prefix('auth')->namespace('Auth')->group(function () {
         Route::post('register', 'AuthenticationController@register')->name('register');
         Route::post('login', 'AuthenticationController@login')->name('login');
